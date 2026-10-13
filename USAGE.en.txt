@@ -1,23 +1,17 @@
 yt-dlp Workbench · reUI
-Supported system: Windows 10 / 11 x64
+Supported system: Windows 10 22H2 / Windows 11 x64
 Project: https://github.com/Yes-nolink/ytdlp-interface-reUI
 Downloads: https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest
 English guide: https://github.com/Yes-nolink/ytdlp-interface-reUI/blob/main/README.en.md
 
-1. Prepare the app
-Extract the full ZIP into a separate folder and keep ui, locales, licenses, and LICENSE.
-Install Microsoft Edge WebView2 Runtime (Evergreen x64):
-https://developer.microsoft.com/en-us/microsoft-edge/webview2/
-
-Download components separately and put these files alongside ytdlp-interface.exe:
-yt-dlp.exe: https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
-ffmpeg.exe and ffprobe.exe: https://github.com/yt-dlp/FFmpeg-Builds/releases/latest
-deno.exe: https://github.com/denoland/deno/releases/latest
-
-Existing yt-dlp and FFmpeg paths can also be configured under Components and updates.
-Place Deno alongside yt-dlp or make it available through PATH.
-Run ytdlp-interface.exe and check component availability.
-The Windows yt-dlp.exe does not require a separate Python installation.
+1. Install and launch
+Download the windows-x64-setup.exe installer and follow the setup wizard.
+yt-dlp, FFmpeg, ffprobe, and Deno are included. Python is not required.
+A missing WebView2 Runtime is installed using Microsoft's bundled offline installer.
+Setup works offline; extracting links and downloading media require internet access.
+Launch reUI from the desktop or Start menu and choose an output folder.
+Default install folder: %LOCALAPPDATA%\Programs\ytdlp-interface-reUI
+Component versions, sources, and checksums are recorded in licenses\components.json.
 
 2. Start downloading
 Paste video, playlist, or channel links into the workbench and click Parse links.
@@ -33,11 +27,13 @@ Switch language under Appearance and app, then restart.
 User preset names, file names, and download settings are preserved.
 
 4. Updates and data
-Check for component updates before updating. Initial yt-dlp and FFmpeg installation
-is manual; Deno can be installed in the app.
-GUI auto-update is disabled. Obtain new GUI builds from this repository's Releases.
+Check for component updates before updating. The installer includes the components
+needed for first use; Deno can also be installed in the app.
+GUI auto-update is disabled. Obtain new installers from this repository's Releases,
+close the app, then install into the same folder.
 Default user data is stored under %LOCALAPPDATA%\ytdlp-interface.
-Removing the portable application folder does not delete downloaded media.
+Uninstall through Windows Installed apps. Personal data, downloaded media, and the
+shared WebView2 Runtime are kept.
 Old Nana queues cannot be imported, and legacy custom themes are not supported.
 
 5. Credits

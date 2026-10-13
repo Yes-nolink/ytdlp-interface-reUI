@@ -1,21 +1,16 @@
 yt-dlp 下载工作台 · reUI
-适用系统：Windows 10 / 11 x64
+适用系统：Windows 10 22H2 / Windows 11 x64
 项目主页：https://github.com/Yes-nolink/ytdlp-interface-reUI
 下载与更新：https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest
 
-一、准备运行环境
-1. 将 ZIP 完整解压到一个独立目录，保留 ui、locales、licenses 和 LICENSE。
-2. 安装 Microsoft Edge WebView2 Runtime（Evergreen x64）。
-   https://developer.microsoft.com/en-us/microsoft-edge/webview2/
-3. 本包不捆绑下载组件，请另行下载 Windows x64 版本：
-   yt-dlp.exe：https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
-   FFmpeg：https://github.com/yt-dlp/FFmpeg-Builds/releases/latest
-   Deno：https://github.com/denoland/deno/releases/latest
-4. 将 yt-dlp.exe、ffmpeg.exe、ffprobe.exe 和 deno.exe 放在界面 EXE 所在目录。
-   已有 yt-dlp、FFmpeg 也可在「组件与更新」中配置路径。
-   Deno 放在 yt-dlp 所在目录，或通过系统 PATH 提供。
-5. 运行 ytdlp-interface.exe，在「组件与更新」中检查组件。
-   使用 Windows 版 yt-dlp.exe 不需要单独安装 Python。
+一、安装与启动
+1. 从下载页取得 windows-x64-setup.exe 安装包，双击并按向导安装。
+2. 安装包已包含 yt-dlp、FFmpeg、ffprobe 和 Deno，无需另装 Python。
+   缺少 WebView2 运行环境时会自动使用内置的微软离线安装程序补齐。
+   安装过程无需联网，实际解析和下载媒体需要网络。
+3. 从桌面或开始菜单启动 reUI，选择保存目录后即可开始使用。
+   默认程序目录：%LOCALAPPDATA%\Programs\ytdlp-interface-reUI
+   组件版本、来源和校验和见 licenses\components.json。
 
 二、开始下载
 1. 在工作台粘贴视频、播放列表或频道链接，点击「解析链接」。
@@ -34,10 +29,11 @@ yt-dlp 下载工作台 · reUI
 
 四、更新与个人数据
 组件更新先点击「检查更新」，再按提示操作。
-首次准备 yt-dlp 和 FFmpeg 需手动下载；Deno 支持应用内安装。
-界面自身的自动更新入口禁用，请从本仓库 Releases 下载新包。
+安装包已包含首次运行所需组件；Deno 也支持应用内安装。
+界面自身的自动更新入口禁用，请从本仓库 Releases 下载新安装包，
+关闭程序后安装到原目录。
 默认个人数据保存在 %LOCALAPPDATA%\ytdlp-interface 下；
-删除便携程序目录不会删除已下载的媒体文件。
+从 Windows「已安装的应用」卸载会保留个人数据、下载文件与共享 WebView2。
 旧 Nana 队列不支持导入，旧版自定义主题不再提供。
 
 五、来源与许可

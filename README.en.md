@@ -7,12 +7,12 @@
 Windows desktop app · English / 简体中文 · Light / dark themes
 
 [![Download](https://img.shields.io/badge/Download-Windows_x64-3864f4?style=flat-square)](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)
-[![Platform](https://img.shields.io/badge/Platform-Windows_10_%2F_11-64748b?style=flat-square)](#download-and-run)
+[![Platform](https://img.shields.io/badge/Platform-Windows_10_%2F_11-64748b?style=flat-square)](#download-and-install)
 [![License](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](LICENSE)
 
 [简体中文](README.md) | **English**
 
-[Download the portable app](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) · [Get started](#start-a-download) · [Build from source](#build-from-source) · [Report an issue](https://github.com/Yes-nolink/ytdlp-interface-reUI/issues)
+[Download the installer](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) · [Get started](#start-a-download) · [Build from source](#build-from-source) · [Report an issue](https://github.com/Yes-nolink/ytdlp-interface-reUI/issues)
 
 </div>
 
@@ -45,37 +45,26 @@ Common actions live in the workbench and download tasks page. Seven preference c
 
 </details>
 
-## Download and run
+## Download and install
 
-1. Open [Releases](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest), download `ytdlp-interface-reUI-*-windows-x64.zip`, and extract the entire archive into a separate folder.
-2. Make sure [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) is installed. If it is missing, install the Evergreen x64 runtime.
-3. Prepare the download components listed below and put their EXE files in the application folder. You can also configure existing component paths under **Components and updates**.
-4. Run `ytdlp-interface.exe` and check component availability under **Components and updates**.
+**One installer contains everything needed to run the app.** Supports Windows 10 22H2 / Windows 11 x64.
 
-**The portable ZIP includes the GUI, UI assets, language files, and licenses. yt-dlp, FFmpeg, ffprobe, and Deno must be obtained separately.** The Windows `yt-dlp.exe` does not require a separate Python installation.
+1. Open the [latest release](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) and download `ytdlp-interface-reUI-*-windows-x64-setup.exe`.
+2. Run the setup wizard. It installs for the current user; no separate Python installation, PATH configuration, or manual component downloads are needed.
+3. Launch reUI from the desktop or Start menu. Paste a link, choose an output folder, and start downloading.
 
-| Component | Purpose | Download |
-| --- | --- | --- |
-| `yt-dlp.exe` | Extract links and download media | [Official yt-dlp Windows x64 executable](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe) |
-| `ffmpeg.exe`, `ffprobe.exe` | Merge, convert, and inspect media | [yt-dlp FFmpeg Builds](https://github.com/yt-dlp/FFmpeg-Builds/releases/latest); choose a Windows x64 build and extract these two files |
-| `deno.exe` | JavaScript runtime support for yt-dlp | [Official Deno releases](https://github.com/denoland/deno/releases/latest); choose `deno-x86_64-pc-windows-msvc.zip` |
+The installer includes these components with their license notices and source information:
 
-Recommended folder layout:
+| Included component | Purpose |
+| --- | --- |
+| yt-dlp | Extract website links and download video or audio |
+| FFmpeg / ffprobe | Merge, convert, and inspect media |
+| Deno | JavaScript runtime support required by yt-dlp |
+| Offline WebView2 installer | Automatically installs a missing UI runtime; uses an existing runtime when available |
 
-```text
-ytdlp-interface-reUI/
-├─ ytdlp-interface.exe
-├─ yt-dlp.exe
-├─ ffmpeg.exe
-├─ ffprobe.exe
-├─ deno.exe
-├─ ui/
-├─ locales/
-├─ licenses/
-└─ LICENSE
-```
+**Setup works offline; extracting links and downloading media require internet access.** WebView2 uses Microsoft's [Evergreen deployment model](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution) and its runtime update mechanism.
 
-Keep the complete `ui` and `locales` directories with the GUI executable. Place Deno alongside yt-dlp or make it available through the system PATH.
+The default install folder is `%LOCALAPPDATA%\Programs\ytdlp-interface-reUI`. Desktop and Start menu shortcuts are included, and the app can be removed from Windows **Installed apps**. Component versions, checksums, and sources are recorded in the [component manifest](licenses/components.json) and release notes.
 
 ## Start a download
 
@@ -90,13 +79,13 @@ Switch the interface language under **Appearance and app**, then restart. Saved 
 
 ## Updates and common questions
 
-- **Missing runtime or assets on startup:** Install WebView2 Runtime and keep the complete `ui` and `locales` folders.
+- **Missing runtime or assets on startup:** Run the full installer again. For a build from source, install WebView2 Runtime and keep the complete `ui` and `locales` folders.
 - **A link fails to parse or download:** Read the task log and check network access, proxy settings, cookies, and the yt-dlp version. Website restrictions still apply.
 - **Merging or conversion fails:** Check that FFmpeg and ffprobe are both present and that the component path is correct.
-- **Component updates:** Check for updates under **Components and updates**, then follow the prompts. Initial yt-dlp and FFmpeg installation is manual; Deno can be installed in the app.
-- **GUI updates:** Download a new archive from this repository's Releases and extract it into a new folder. GUI auto-update is disabled to avoid replacing this interface with the upstream version.
+- **Component updates:** Check for updates under **Components and updates**, then follow the prompts. The installer already includes the components needed for first use.
+- **GUI updates:** Close the app, download a new installer from this repository's Releases, and install it into the same folder. GUI auto-update is disabled to avoid replacing this interface with the upstream version.
 
-Personal settings, queue data, and window state are stored under `%LOCALAPPDATA%\ytdlp-interface` by default. Removing the portable application folder does not delete downloaded media. Old Nana queues cannot be imported, and legacy custom themes are no longer supported. Physical mixed-DPI multi-monitor behavior and touchpad interaction still need further verification.
+Personal settings, queue data, and window state are stored under `%LOCALAPPDATA%\ytdlp-interface` by default. Uninstalling keeps personal data, downloaded media, and the shared WebView2 Runtime. Old Nana queues cannot be imported, and legacy custom themes are no longer supported.
 
 ## Build from source
 
@@ -119,7 +108,16 @@ The default build directory is `.build/web-app`, and the output package is `.bui
 ./build.ps1 -OutputDirectory ./release/my-build
 ```
 
-An existing local portable toolchain under `.build` remains supported. The script only changes environment variables for the current process. Download components are not needed to compile the GUI; prepare them afterward using the instructions above.
+An existing local portable toolchain under `.build` remains supported. The script only changes environment variables for the current process. `build.ps1` builds the GUI; download components are not needed to compile it.
+
+To build the full installer, also install NSIS 3. Obtain the components listed in the [manifest](licenses/components.json), place `yt-dlp.exe`, `ffmpeg.exe`, `ffprobe.exe`, and `deno.exe` in the output package, and obtain Microsoft's signed WebView2 x64 Evergreen Standalone Installer. Then run:
+
+```powershell
+./build-installer.ps1 -PackageDirectory ./.build/web-package `
+    -WebView2Installer ./MicrosoftEdgeWebView2RuntimeInstallerX64.exe
+```
+
+The script checks required files and the WebView2 signature, then creates an EXE with setup, shortcuts, and an uninstaller.
 
 ## Repository layout
 
@@ -130,7 +128,9 @@ locales/     English and Simplified Chinese language files
 vendor/      Required zlib sources
 licenses/    Upstream and third-party license notices
 docs/images/ Screenshots used in the README
-build.ps1    Build and packaging script
+installer/   English and Chinese setup wizard
+build.ps1    GUI build and packaging script
+build-installer.ps1  Full installer build script
 ```
 
 The public repository starts from the final source snapshot. It excludes personal settings, cookies, temporary builds, validation scripts, validation reports, and old installers.

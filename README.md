@@ -7,12 +7,12 @@
 Windows 桌面应用 · 简体中文 / English · 浅色 / 深色主题
 
 [![下载](https://img.shields.io/badge/下载-Windows_x64-3864f4?style=flat-square)](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)
-[![平台](https://img.shields.io/badge/平台-Windows_10_%2F_11-64748b?style=flat-square)](#下载与运行)
+[![平台](https://img.shields.io/badge/平台-Windows_10_%2F_11-64748b?style=flat-square)](#下载安装)
 [![许可证](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](LICENSE)
 
 **简体中文** | [English](README.en.md)
 
-[下载便携版](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) · [使用说明](#开始下载) · [源码构建](#从源码构建) · [反馈问题](https://github.com/Yes-nolink/ytdlp-interface-reUI/issues)
+[下载安装包](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) · [使用说明](#开始下载) · [源码构建](#从源码构建) · [反馈问题](https://github.com/Yes-nolink/ytdlp-interface-reUI/issues)
 
 </div>
 
@@ -47,37 +47,26 @@ A Windows desktop GUI for yt-dlp with a WebView2 workbench, a C++ download core,
 
 </details>
 
-## 下载与运行
+## 下载安装
 
-1. 打开 [Releases](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)，下载 `ytdlp-interface-reUI-*-windows-x64.zip`，完整解压到一个独立目录。
-2. 确认已安装 [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)。缺少时安装 Evergreen Runtime 的 x64 版本。
-3. 准备下表中的下载组件，将对应 EXE 放在程序目录中；已有组件也可通过「组件与更新」配置路径。
-4. 运行 `ytdlp-interface.exe`，在「组件与更新」中检查组件是否可用。
+**下载一个安装包，装好即可使用。** 支持 Windows 10 22H2 / Windows 11 x64。
 
-**便携 ZIP 包含界面程序、界面资源、语言文件和许可证；yt-dlp、FFmpeg、ffprobe、Deno 需另行准备。** 使用 Windows 版 `yt-dlp.exe` 无需另装 Python。
+1. 打开 [最新版本下载页](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)，下载 `ytdlp-interface-reUI-*-windows-x64-setup.exe`。
+2. 双击安装，按向导完成操作。默认安装到当前用户目录，不需要单独安装 Python、配置 PATH 或手动下载组件。
+3. 从桌面或开始菜单启动 reUI，粘贴链接，选择保存目录后开始下载。
 
-| 组件 | 作用 | 下载来源 |
-| --- | --- | --- |
-| `yt-dlp.exe` | 解析链接与下载媒体 | [yt-dlp 官方 Windows x64 版](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe) |
-| `ffmpeg.exe`、`ffprobe.exe` | 音视频合并、转码与媒体信息 | [yt-dlp FFmpeg Builds](https://github.com/yt-dlp/FFmpeg-Builds/releases/latest)，选择 Windows x64 构建并提取这两个文件 |
-| `deno.exe` | yt-dlp 的 JavaScript 运行支持 | [Deno 官方发布](https://github.com/denoland/deno/releases/latest)，选择 `deno-x86_64-pc-windows-msvc.zip` |
+安装包内置以下组件，并保留各自的许可声明与来源信息：
 
-推荐的目录结构：
+| 内置组件 | 用途 |
+| --- | --- |
+| yt-dlp | 解析网站链接、下载视频与音频 |
+| FFmpeg / ffprobe | 合并、转码与读取媒体信息 |
+| Deno | yt-dlp 所需的 JavaScript 运行支持 |
+| WebView2 离线安装程序 | 自动补齐缺失的界面运行环境；已有环境时直接使用 |
 
-```text
-ytdlp-interface-reUI/
-├─ ytdlp-interface.exe
-├─ yt-dlp.exe
-├─ ffmpeg.exe
-├─ ffprobe.exe
-├─ deno.exe
-├─ ui/
-├─ locales/
-├─ licenses/
-└─ LICENSE
-```
+**安装过程无需联网；解析链接和下载媒体需要网络。** WebView2 采用微软的 [Evergreen 部署方式](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution)，由其更新机制维护运行环境。
 
-不要只复制界面 EXE；`ui` 和 `locales` 必须随程序保留。Deno 放在 yt-dlp 所在目录，或通过系统 PATH 提供。
+默认程序目录为 `%LOCALAPPDATA%\Programs\ytdlp-interface-reUI`，提供桌面与开始菜单快捷方式，也可从 Windows「已安装的应用」卸载。具体组件版本、校验和及来源见 [组件清单](licenses/components.json) 和每个 Release 的说明。
 
 ## 开始下载
 
@@ -92,13 +81,13 @@ ytdlp-interface-reUI/
 
 ## 更新与常见问题
 
-- **打开程序提示缺少运行环境：** 安装 WebView2 Runtime，并保留完整的 `ui`、`locales` 目录。
+- **打开程序提示缺少运行环境或资源：** 重新运行完整安装包；使用自行构建的程序时，安装 WebView2 Runtime 并保留 `ui`、`locales` 目录。
 - **链接无法解析或下载失败：** 查看任务日志，检查网络、代理、Cookies 和 yt-dlp 版本；网站自身的限制仍会影响下载。
 - **合并或转码失败：** 检查 FFmpeg 与 ffprobe 是否成对存在，组件路径是否正确。
-- **更新组件：** 在「组件与更新」中先检查更新，再按提示操作。首次准备 yt-dlp 和 FFmpeg 需手动下载；Deno 支持在应用内安装。
-- **更新界面程序：** 从本仓库 Releases 下载新包并解压到新目录。当前界面自身的自动更新入口禁用，避免被上游原版覆盖。
+- **更新组件：** 在「组件与更新」中先检查更新，再按提示操作。安装包已包含首次运行所需的组件。
+- **更新界面程序：** 关闭程序，从本仓库 Releases 下载新安装包，安装到原目录。当前界面自身的自动更新入口禁用，避免被上游原版覆盖。
 
-个人设置、队列与窗口状态默认保存在 `%LOCALAPPDATA%\ytdlp-interface` 下。移除便携程序目录不会删除已下载的媒体文件；旧 Nana 队列不支持导入。当前版本提供浅色、深色和系统主题，不支持旧版自定义主题。真实跨屏混合 DPI 和物理触控板操作仍有待进一步验证。
+个人设置、队列与窗口状态默认保存在 `%LOCALAPPDATA%\ytdlp-interface` 下。卸载保留个人数据、已下载的媒体文件和共享 WebView2 运行环境。旧 Nana 队列不支持导入，当前版本不支持旧版自定义主题。
 
 ## 从源码构建
 
@@ -121,7 +110,16 @@ cd ytdlp-interface-reUI
 ./build.ps1 -OutputDirectory ./release/my-build
 ```
 
-本地已有的 `.build` 便携工具链仍可使用。脚本只修改当前进程环境。下载组件不参与界面编译，构建后按前面的运行步骤准备即可。
+本地已有的 `.build` 便携工具链仍可使用。脚本只修改当前进程环境。`build.ps1` 构建界面程序；下载组件不参与界面编译。
+
+制作完整安装包还需 NSIS 3：根据 [组件清单](licenses/components.json) 取得组件，把 `yt-dlp.exe`、`ffmpeg.exe`、`ffprobe.exe` 和 `deno.exe` 放入输出包；取得微软签名的 WebView2 x64 Evergreen 离线安装程序，然后执行：
+
+```powershell
+./build-installer.ps1 -PackageDirectory ./.build/web-package `
+    -WebView2Installer ./MicrosoftEdgeWebView2RuntimeInstallerX64.exe
+```
+
+脚本会检查组件是否完整和 WebView2 签名，生成包含安装、快捷方式与卸载功能的 EXE。
 
 ## 项目结构
 
@@ -132,7 +130,9 @@ locales/    简体中文与英文语言文件
 vendor/     构建所需的 zlib 源码
 licenses/   上游与第三方许可声明
 docs/images/ 首页展示截图
-build.ps1   构建与打包脚本
+installer/  中英文安装向导
+build.ps1   界面构建与打包脚本
+build-installer.ps1  完整安装包构建脚本
 ```
 
 公开仓库从当前最终源码快照开始，不包含个人配置、Cookies、临时构建、验证脚本、验证报告或旧安装包。
