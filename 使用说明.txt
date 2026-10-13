@@ -1,7 +1,7 @@
-yt-dlp 下载工作台 · Web 工作台版
+yt-dlp 下载工作台 · reUI
 适用系统：Windows 10 / 11 x64
-项目主页：https://github.com/Yes-nolink/ytdlp-interface-zh-cn
-下载与更新：https://github.com/Yes-nolink/ytdlp-interface-zh-cn/releases/latest
+项目主页：https://github.com/Yes-nolink/ytdlp-interface-reUI
+下载与更新：https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest
 
 一、准备运行环境
 1. 将 ZIP 完整解压到一个独立目录，保留 ui、locales、licenses 和 LICENSE。

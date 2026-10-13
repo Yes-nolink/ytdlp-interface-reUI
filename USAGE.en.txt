@@ -1,0 +1,47 @@
+yt-dlp Workbench · reUI
+Supported system: Windows 10 / 11 x64
+Project: https://github.com/Yes-nolink/ytdlp-interface-reUI
+Downloads: https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest
+English guide: https://github.com/Yes-nolink/ytdlp-interface-reUI/blob/main/README.en.md
+
+1. Prepare the app
+Extract the full ZIP into a separate folder and keep ui, locales, licenses, and LICENSE.
+Install Microsoft Edge WebView2 Runtime (Evergreen x64):
+https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+
+Download components separately and put these files alongside ytdlp-interface.exe:
+yt-dlp.exe: https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
+ffmpeg.exe and ffprobe.exe: https://github.com/yt-dlp/FFmpeg-Builds/releases/latest
+deno.exe: https://github.com/denoland/deno/releases/latest
+
+Existing yt-dlp and FFmpeg paths can also be configured under Components and updates.
+Place Deno alongside yt-dlp or make it available through PATH.
+Run ytdlp-interface.exe and check component availability.
+The Windows yt-dlp.exe does not require a separate Python installation.
+
+2. Start downloading
+Paste video, playlist, or channel links into the workbench and click Parse links.
+Choose entries, then select output format, quality, and a destination folder.
+Adjust subtitles, artwork, metadata, and file naming as needed.
+Add the selection to the queue or start downloading.
+Use Download tasks to inspect progress, logs, and output files.
+
+3. Language and settings
+The sidebar provides Download defaults, Tasks and scheduling, Network and authentication,
+Components and updates, Appearance and app, Advanced and presets, and About.
+Switch language under Appearance and app, then restart.
+User preset names, file names, and download settings are preserved.
+
+4. Updates and data
+Check for component updates before updating. Initial yt-dlp and FFmpeg installation
+is manual; Deno can be installed in the app.
+GUI auto-update is disabled. Obtain new GUI builds from this repository's Releases.
+Default user data is stored under %LOCALAPPDATA%\ytdlp-interface.
+Removing the portable application folder does not delete downloaded media.
+Old Nana queues cannot be imported, and legacy custom themes are not supported.
+
+5. Credits
+Based on ErrorFlynn/ytdlp-interface v2.19.1 under the MIT license.
+Current GUI dependencies include WebView2, nlohmann/json, zlib, and Lucide.
+yt-dlp, FFmpeg, and Deno are separate components with their own licenses.
+See LICENSE and the licenses folder for notices.

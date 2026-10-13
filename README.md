@@ -1,16 +1,18 @@
 <div align="center">
 
-# yt-dlp 下载工作台
+# yt-dlp 下载工作台 · reUI
 
 **用中文管理视频与音频下载，从粘贴链接到整理文件。**
 
 Windows 桌面应用 · 简体中文 / English · 浅色 / 深色主题
 
-[![下载](https://img.shields.io/badge/下载-Windows_x64-3864f4?style=flat-square)](https://github.com/Yes-nolink/ytdlp-interface-zh-cn/releases/latest)
+[![下载](https://img.shields.io/badge/下载-Windows_x64-3864f4?style=flat-square)](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)
 [![平台](https://img.shields.io/badge/平台-Windows_10_%2F_11-64748b?style=flat-square)](#下载与运行)
 [![许可证](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)](LICENSE)
 
-[下载便携版](https://github.com/Yes-nolink/ytdlp-interface-zh-cn/releases/latest) · [使用说明](#开始下载) · [源码构建](#从源码构建) · [反馈问题](https://github.com/Yes-nolink/ytdlp-interface-zh-cn/issues)
+**简体中文** | [English](README.en.md)
+
+[下载便携版](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest) · [使用说明](#开始下载) · [源码构建](#从源码构建) · [反馈问题](https://github.com/Yes-nolink/ytdlp-interface-reUI/issues)
 
 </div>
 
@@ -47,7 +49,7 @@ A Windows desktop GUI for yt-dlp with a WebView2 workbench, a C++ download core,
 
 ## 下载与运行
 
-1. 打开 [Releases](https://github.com/Yes-nolink/ytdlp-interface-zh-cn/releases/latest)，下载 `ytdlp-interface-zh-cn-*-windows-x64.zip`，完整解压到一个独立目录。
+1. 打开 [Releases](https://github.com/Yes-nolink/ytdlp-interface-reUI/releases/latest)，下载 `ytdlp-interface-reUI-*-windows-x64.zip`，完整解压到一个独立目录。
 2. 确认已安装 [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)。缺少时安装 Evergreen Runtime 的 x64 版本。
 3. 准备下表中的下载组件，将对应 EXE 放在程序目录中；已有组件也可通过「组件与更新」配置路径。
 4. 运行 `ytdlp-interface.exe`，在「组件与更新」中检查组件是否可用。
@@ -63,7 +65,7 @@ A Windows desktop GUI for yt-dlp with a WebView2 workbench, a C++ download core,
 推荐的目录结构：
 
 ```text
-ytdlp-interface-zh-cn/
+ytdlp-interface-reUI/
 ├─ ytdlp-interface.exe
 ├─ yt-dlp.exe
 ├─ ffmpeg.exe
@@ -105,8 +107,8 @@ ytdlp-interface-zh-cn/
 在 **x64 Developer PowerShell for Visual Studio** 中执行：
 
 ```powershell
-git clone https://github.com/Yes-nolink/ytdlp-interface-zh-cn.git
-cd ytdlp-interface-zh-cn
+git clone https://github.com/Yes-nolink/ytdlp-interface-reUI.git
+cd ytdlp-interface-reUI
 ./build.ps1
 ./.build/web-package/ytdlp-interface.exe
 ```

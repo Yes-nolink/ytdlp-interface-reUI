@@ -46,6 +46,7 @@ Copy-Item -LiteralPath (Join-Path $buildDirectory 'ytdlp-interface.exe') -Destin
 Copy-Item -LiteralPath (Join-Path $project 'locales') -Destination $packageDirectory -Recurse
 Copy-Item -LiteralPath (Join-Path $project 'LICENSE') -Destination $packageDirectory
 Copy-Item -LiteralPath (Join-Path $project '使用说明.txt') -Destination $packageDirectory
+Copy-Item -LiteralPath (Join-Path $project 'USAGE.en.txt') -Destination $packageDirectory
 Copy-Item -LiteralPath (Join-Path $project 'licenses') -Destination $packageDirectory -Recurse
 Copy-Item -LiteralPath (Join-Path $project 'ui') -Destination $packageDirectory -Recurse
 Write-Output "已打包至 $packageDirectory；未覆盖 dist 或已安装组件"
