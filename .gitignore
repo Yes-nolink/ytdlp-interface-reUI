@@ -1,0 +1,32 @@
+.build/
+vendor/**
+!vendor/**/
+!vendor/libpng/packages/zlib.static.1.2.5/build/native/src/*
+!vendor/libpng/packages/zlib.static.1.2.5/build/native/include/*
+dist/
+release/
+
+# 本地验证和开发过程记录
+tests/
+docs/validation/
+docs/*smoke*.json
+docs/*validation*.md
+docs/migration-map.md
+docs/ui-*.md
+docs/web-ui-architecture.md
+验证说明.md
+
+# 个人配置、认证信息和临时产物
+.env
+.env.*
+cookies*.txt
+*.log
+*.tmp
+*.bak
+*.zip
+*.exe
+*.dll
+ytdlp-interface.json
+queue*.json
+settings*.json
+window*.json

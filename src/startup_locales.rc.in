@@ -1,0 +1,3 @@
+#include <winres.h>
+201 RCDATA "@CMAKE_SOURCE_DIR@/locales/zh-CN.json"
+202 RCDATA "@CMAKE_SOURCE_DIR@/locales/en-US.json"

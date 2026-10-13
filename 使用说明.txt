@@ -1,0 +1,47 @@
+yt-dlp 下载工作台 · Web 工作台版
+适用系统：Windows 10 / 11 x64
+项目主页：https://github.com/Yes-nolink/ytdlp-interface-zh-cn
+下载与更新：https://github.com/Yes-nolink/ytdlp-interface-zh-cn/releases/latest
+
+一、准备运行环境
+1. 将 ZIP 完整解压到一个独立目录，保留 ui、locales、licenses 和 LICENSE。
+2. 安装 Microsoft Edge WebView2 Runtime（Evergreen x64）。
+   https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+3. 本包不捆绑下载组件，请另行下载 Windows x64 版本：
+   yt-dlp.exe：https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
+   FFmpeg：https://github.com/yt-dlp/FFmpeg-Builds/releases/latest
+   Deno：https://github.com/denoland/deno/releases/latest
+4. 将 yt-dlp.exe、ffmpeg.exe、ffprobe.exe 和 deno.exe 放在界面 EXE 所在目录。
+   已有 yt-dlp、FFmpeg 也可在「组件与更新」中配置路径。
+   Deno 放在 yt-dlp 所在目录，或通过系统 PATH 提供。
+5. 运行 ytdlp-interface.exe，在「组件与更新」中检查组件。
+   使用 Windows 版 yt-dlp.exe 不需要单独安装 Python。
+
+二、开始下载
+1. 在工作台粘贴视频、播放列表或频道链接，点击「解析链接」。
+2. 勾选要下载的条目，进入下载设置。
+3. 选择视频或音频格式、清晰度和保存目录，按需设置字幕、封面与文件命名。
+4. 加入队列或立即下载，在「下载任务」中查看进度、日志和文件。
+5. 纯音频可选择 MP3 / M4A，并按需启用嵌入封面和元数据。
+   播放器是否显示封面取决于播放器自身支持。
+
+三、设置与语言
+左栏设置分为下载默认值、任务与调度、网络与认证、组件与更新、
+外观与应用、高级与方案、关于。
+在「外观与应用」中选择简体中文或 English，重启后生效。
+语言切换保留用户保存的方案名称、文件名与下载设置。
+命名方案、参数方案和下载方案分别保存，按对应入口启用。
+
+四、更新与个人数据
+组件更新先点击「检查更新」，再按提示操作。
+首次准备 yt-dlp 和 FFmpeg 需手动下载；Deno 支持应用内安装。
+界面自身的自动更新入口禁用，请从本仓库 Releases 下载新包。
+默认个人数据保存在 %LOCALAPPDATA%\ytdlp-interface 下；
+删除便携程序目录不会删除已下载的媒体文件。
+旧 Nana 队列不支持导入，旧版自定义主题不再提供。
+
+五、来源与许可
+本项目基于 ErrorFlynn/ytdlp-interface v2.19.1，沿用 MIT 许可。
+当前界面使用 WebView2、nlohmann/json、zlib 和 Lucide。
+下载由独立 yt-dlp、FFmpeg、Deno 组件完成，各组件许可证独立适用。
+许可声明见 LICENSE 和 licenses 目录，详细说明见项目主页。

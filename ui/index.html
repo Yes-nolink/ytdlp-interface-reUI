@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src https: http: data:; connect-src 'self'; object-src 'none'; frame-src 'none'"><title>ytdlp-interface · UI v1</title>
+<style>
+#ytdlp-workflow-redesign .product {
+  --paper: light-dark(#f7f8fa,#22262b); --surface: light-dark(#ffffff,#2d3239); --rail: light-dark(#f0f2f5,#1d2228);
+  --ink: light-dark(#202b37,#e9eef5); --muted-ink: light-dark(#5f6b79,#b5bfcd); --line: light-dark(#dce1e8,#444b56);
+  --soft: light-dark(#e8edf3,#363e49); --brand: light-dark(#0067b9,#94caff); --on-brand: light-dark(#ffffff,#102841);
+  --active: light-dark(#e4eff9,#293e55); --success: light-dark(#3c6849,#abd4b3); --error: light-dark(#a03b37,#f0aaa4);
+  --text-title: 24px; --text-focus: 18px; --text-value: 15px; --text-body: 14px; --text-label: 12px; --text-note: 12px;
+  --row-space: 10px; --control-radius: 5px;
+  display: flex; flex-direction: column; height: 100%; background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 9px; font: 400 var(--text-body)/1.55 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+}
+#ytdlp-workflow-redesign .product[data-layout="native"] { --row-space: 13px; }
+#ytdlp-workflow-redesign .product *, #ytdlp-workflow-redesign .product *::before, #ytdlp-workflow-redesign .product *::after { box-sizing: border-box; }
+#ytdlp-workflow-redesign .product [hidden] { display: none !important; }
+#ytdlp-workflow-redesign .product button, #ytdlp-workflow-redesign .product input, #ytdlp-workflow-redesign .product select, #ytdlp-workflow-redesign .product textarea { font: inherit; color: inherit; }
+#ytdlp-workflow-redesign .product button:disabled { opacity: .45; cursor: default; }
+#ytdlp-workflow-redesign .product input[type="checkbox"], #ytdlp-workflow-redesign .product input[type="radio"] { accent-color: var(--brand); width: 16px; height: 16px; margin: 2px 0 0; flex: 0 0 auto; }
+#ytdlp-workflow-redesign .product select, #ytdlp-workflow-redesign .product input[type="text"], #ytdlp-workflow-redesign .product input[type="number"], #ytdlp-workflow-redesign .product textarea { width: 100%; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--control-radius); padding: 8px 10px; }
+#ytdlp-workflow-redesign .product select, #ytdlp-workflow-redesign .product input[type="text"], #ytdlp-workflow-redesign .product input[type="number"] { font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product textarea { resize: vertical; }
+#ytdlp-workflow-redesign .product input[type="range"] { width: 100%; accent-color: var(--brand); }
+#ytdlp-workflow-redesign .product input[type="color"] { min-width: 38px; max-width: 50px; height: 36px; padding: 3px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--control-radius); }
+#ytdlp-workflow-redesign .product h1, #ytdlp-workflow-redesign .product h2, #ytdlp-workflow-redesign .product p { margin: 0; }
+#ytdlp-workflow-redesign .product h1 { font: 600 var(--text-title)/1.35 var(--heading-font,"Segoe UI","Microsoft YaHei",sans-serif); letter-spacing: -.5px; margin: 6px 0 8px; }
+#ytdlp-workflow-redesign .product h2 { font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product small, #ytdlp-workflow-redesign .product .small-label, #ytdlp-workflow-redesign .product .eyebrow { font-size: var(--text-label); font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .small-label, #ytdlp-workflow-redesign .product .eyebrow { display: block; }
+#ytdlp-workflow-redesign .product .small-note { font-size: var(--text-note); color: var(--muted-ink); margin: 5px 0; }
+#ytdlp-workflow-redesign .product [role="alert"], #ytdlp-workflow-redesign .product .error { color: var(--error); }
+#ytdlp-workflow-redesign .product svg { flex: 0 0 auto; }
+#ytdlp-workflow-redesign .product .desktop-bar { height: 40px; flex: 0 0 40px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 14px; border-bottom: 1px solid var(--line); background: var(--rail); border-radius: 9px 9px 0 0; font-size: 13px; }
+#ytdlp-workflow-redesign .product .desktop-bar > span:first-child { display: flex; gap: 7px; align-items: center; font-weight: 600; }
+#ytdlp-workflow-redesign .product .window-actions { font-size: 18px; letter-spacing: 6px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .app-body { display: grid; grid-template-columns: 152px minmax(0,1fr) 260px; grid-template-rows: minmax(0,1fr); flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .app-nav { display: flex; flex-direction: column; gap: 5px; padding: 24px 10px 14px; background: var(--rail); border-right: 1px solid var(--line); min-height: 0; overflow: auto; overscroll-behavior: contain; }
+#ytdlp-workflow-redesign .product .nav-group-label { padding: 0 11px 10px; font-size: 11px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .nav-button { display: flex; align-items: center; gap: 9px; text-align: left; width: 100%; border: 0; background: transparent; padding: 10px; border-radius: var(--control-radius); white-space: nowrap; }
+#ytdlp-workflow-redesign .product .nav-button[aria-pressed="true"] { background: var(--active); color: var(--brand); font-weight: 500; }
+#ytdlp-workflow-redesign .product .nav-button:hover, #ytdlp-workflow-redesign .product .text-button:hover:not(:disabled), #ytdlp-workflow-redesign .product .menu-item:hover:not(:disabled) { background: var(--soft); }
+#ytdlp-workflow-redesign .product .queue-count { margin-left: auto; font-size: 11px; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .nav-engine { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted-ink); padding: 15px 8px 0; }
+#ytdlp-workflow-redesign .product .nav-engine > span { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+#ytdlp-workflow-redesign .product .main-area { min-width: 0; min-height: 0; padding: 28px; display: flex; }
+#ytdlp-workflow-redesign .product .view { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; }
+#ytdlp-workflow-redesign .product .view > :not(.candidate-list,.queue-layout,.output-layout,.settings-layout,.form-scroll,.detail-panel) { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .page-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+#ytdlp-workflow-redesign .product .page-top > div { min-width: 0; }
+#ytdlp-workflow-redesign .product .page-top p { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .page-top p, #ytdlp-workflow-redesign .product .step-label, #ytdlp-workflow-redesign .product .settings-save-state { color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .page-top .output-scope { font-size: var(--text-body); color: var(--ink); font-weight: 500; }
+#ytdlp-workflow-redesign .product .page-top .panel-context { font-size: 16px; color: var(--ink); font-weight: 500; }
+#ytdlp-workflow-redesign .product .step-label, #ytdlp-workflow-redesign .product .settings-save-state { padding-top: 8px; }
+#ytdlp-workflow-redesign .product .button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--control-radius); padding: 7px 12px; min-height: 34px; font-size: 13px; font-weight: 400; }
+#ytdlp-workflow-redesign .product .button.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .button:hover:not(:disabled) { filter: brightness(.96); }
+#ytdlp-workflow-redesign .product .text-button, #ytdlp-workflow-redesign .product .menu-item { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border: 0; border-radius: var(--control-radius); background: transparent; font-size: 12px; }
+#ytdlp-workflow-redesign .product .text-button { justify-content: center; color: var(--muted-ink); font-weight: 400; }
+#ytdlp-workflow-redesign .product .menu-item { text-align: left; justify-content: flex-start; font-size: 13px; }
+#ytdlp-workflow-redesign .product .field { display: grid; gap: 7px; min-width: 0; }
+#ytdlp-workflow-redesign .product .field > span:first-child { font-size: var(--text-label); font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .two-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+#ytdlp-workflow-redesign .product .form-section { display: grid; gap: 16px; padding: 24px 0; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .form-section:first-child { padding-top: 0; border-top: 0; }
+#ytdlp-workflow-redesign .product .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#ytdlp-workflow-redesign .product .input-actions, #ytdlp-workflow-redesign .product .action-pair { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#ytdlp-workflow-redesign .product .input-actions input:not([type="color"]), #ytdlp-workflow-redesign .product .input-actions > select { flex: 1 1 120px; width: 0; min-width: 0; }
+#ytdlp-workflow-redesign .product .check-row { display: grid; grid-template-columns: 16px minmax(0,1fr); gap: 9px; align-items: start; font-size: 13px; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .check-row small { grid-column: 2; }
+#ytdlp-workflow-redesign .product .check-row strong { display: block; font-size: 12px; font-weight: 500; }
+#ytdlp-workflow-redesign .product .check-stack { display: grid; gap: 14px; }
+#ytdlp-workflow-redesign .product .compact-checks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px 16px; }
+#ytdlp-workflow-redesign .product .advanced-block { margin: 0; padding: 0; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .advanced-block > summary { display: flex; align-items: center; gap: 12px; list-style: none; padding: 16px 0; font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .advanced-block > summary:has(.section-value) { font-size: 13px; font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .advanced-block > summary::-webkit-details-marker { display: none; }
+#ytdlp-workflow-redesign .product .advanced-block > summary::before { content: "›"; font-size: 18px; width: 12px; color: var(--muted-ink); flex: 0 0 auto; line-height: 1; }
+#ytdlp-workflow-redesign .product .advanced-block[open] > summary::before { transform: rotate(90deg); }
+#ytdlp-workflow-redesign .product .section-value { margin-left: auto; color: var(--ink); font-size: var(--text-body); font-weight: 500; text-align: right; }
+#ytdlp-workflow-redesign .product .section-value[data-passive="true"] { color: var(--muted-ink); font-size: var(--text-note); font-weight: 400; }
+#ytdlp-workflow-redesign .product .advanced-body { display: grid; gap: 16px; padding: 4px 0 24px 24px; }
+#ytdlp-workflow-redesign .product .advanced-body > .advanced-block { margin-top: 0; }
+#ytdlp-workflow-redesign .product .view-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .view-actions > span { font-size: 12px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .scheme-actions, #ytdlp-workflow-redesign .product .folder-actions, #ytdlp-workflow-redesign .product .queue-operations, #ytdlp-workflow-redesign .product .batch-more, #ytdlp-workflow-redesign .product .config-more, #ytdlp-workflow-redesign .product .component-more { position: relative; }
+#ytdlp-workflow-redesign .product .scheme-actions > summary, #ytdlp-workflow-redesign .product .folder-actions > summary, #ytdlp-workflow-redesign .product .queue-operations > summary, #ytdlp-workflow-redesign .product .batch-more > summary, #ytdlp-workflow-redesign .product .config-more > summary, #ytdlp-workflow-redesign .product .component-more > summary { list-style: none; white-space: nowrap; }
+#ytdlp-workflow-redesign .product .menu-body { position: absolute; right: 0; top: calc(100% + 5px); z-index: 5; width: 280px; max-width: 100%; display: grid; gap: 14px; padding: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; box-shadow: 0 8px 22px color-mix(in srgb,var(--ink) 10%,transparent); }
+#ytdlp-workflow-redesign .product .queue-operations .menu-body, #ytdlp-workflow-redesign .product .scheme-actions .menu-body, #ytdlp-workflow-redesign .product .folder-actions .menu-body, #ytdlp-workflow-redesign .product .batch-more .menu-body, #ytdlp-workflow-redesign .product .config-more .menu-body, #ytdlp-workflow-redesign .product .component-more .menu-body { max-width: none; }
+#ytdlp-workflow-redesign .product .menu-action-list { display: grid; gap: 3px; }
+#ytdlp-workflow-redesign .product .menu-action-list > .small-label { margin: 0 8px 6px; }
+#ytdlp-workflow-redesign .product .link-area { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; }
+#ytdlp-workflow-redesign .product .link-box { display: flex; align-items: center; gap: 9px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--control-radius); padding: 0 10px; min-width: 0; }
+#ytdlp-workflow-redesign .product .link-box textarea { border: 0; background: transparent; padding-left: 0; font-size: 12px; }
+#ytdlp-workflow-redesign .product .source-state { color: var(--muted-ink); font-size: 12px; margin: 8px 0; }
+#ytdlp-workflow-redesign .product .source-heading { display: flex; align-items: center; gap: 11px; margin: 12px 0; }
+#ytdlp-workflow-redesign .product .source-heading > div:nth-child(2) { min-width: 0; }
+#ytdlp-workflow-redesign .product .source-heading h2, #ytdlp-workflow-redesign .product .source-heading p { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .source-avatar { width: 36px; height: 36px; background: var(--brand); color: var(--on-brand); display: grid; place-items: center; border-radius: 7px; font-size: 18px; }
+#ytdlp-workflow-redesign .product .source-heading h2 { font-size: 16px; font-weight: 600; }
+#ytdlp-workflow-redesign .product .source-heading p, #ytdlp-workflow-redesign .product .source-tag { font-size: var(--text-label); color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .source-tag { margin-left: auto; }
+#ytdlp-workflow-redesign .product .source-tag > span { display: block; }
+#ytdlp-workflow-redesign .product .selection-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+#ytdlp-workflow-redesign .product .selection-tools > div { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+#ytdlp-workflow-redesign .product .list-scroll-tools { margin-left: auto; }
+#ytdlp-workflow-redesign .product .list-scroll-tools button { padding: 6px 8px; }
+#ytdlp-workflow-redesign .product .candidate-list, #ytdlp-workflow-redesign .product .jobs { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+#ytdlp-workflow-redesign .product .selection-tools > label { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+#ytdlp-workflow-redesign .product .selected-count { font-size: var(--text-body); font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .range-bar { display: flex; align-items: flex-end; gap: 10px; padding: 12px 0; }
+#ytdlp-workflow-redesign .product .range-bar label { display: grid; gap: 5px; flex: 1; font-size: 12px; }
+#ytdlp-workflow-redesign .product .candidate { display: grid; grid-template-columns: 18px 100px minmax(0,1fr) 22px; gap: 15px; align-items: center; padding: var(--row-space) 8px; border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .candidate.is-selected { background: var(--active); }
+#ytdlp-workflow-redesign .product .candidate:hover { background: var(--soft); }
+#ytdlp-workflow-redesign .product .video-info { display: grid; gap: 5px; min-width: 0; }
+#ytdlp-workflow-redesign .product .video-info strong { font-weight: 500; font-size: var(--text-body); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .video-info > span, #ytdlp-workflow-redesign .product .video-index { font-size: var(--text-label); color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .video-info > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .video-index { text-align: right; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .cover { width: 100%; aspect-ratio: 16/9; display: flex; justify-content: space-between; align-items: flex-end; padding: 8px; border-radius: 3px; overflow: hidden; font: 700 12px/1.05 Arial,sans-serif; letter-spacing: -.35px; }
+#ytdlp-workflow-redesign .product .cover b { font-size: 25px; align-self: flex-start; font-weight: 400; }
+#ytdlp-workflow-redesign .product .art-grid { background: light-dark(#d8e1c4,#c0cdb0); color: light-dark(#2f4b36,#243729); }
+#ytdlp-workflow-redesign .product .art-space { background: light-dark(#eadcc7,#d4c3aa); color: light-dark(#564337,#3e342c); }
+#ytdlp-workflow-redesign .product .art-clear { background: light-dark(#bfccdf,#a9bad3); color: light-dark(#293956,#243550); }
+#ytdlp-workflow-redesign .product .art-color { background: light-dark(#dfb6a3,#d5a48d); color: light-dark(#55392c,#473025); }
+#ytdlp-workflow-redesign .product .art-motion { background: light-dark(#d7d2e5,#c1b8d8); color: light-dark(#4b3f65,#3d3159); }
+#ytdlp-workflow-redesign .product .art-workflow { background: light-dark(#d9d7cc,#c5c2b4); color: light-dark(#45483b,#363b2b); }
+#ytdlp-workflow-redesign .product .output-layout { display: flex; flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .output-list-pane { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; }
+#ytdlp-workflow-redesign .product .output-list-pane > .output-form { flex: 1; }
+#ytdlp-workflow-redesign .product .output-list-pane > .view-actions { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .output-form { display: grid; gap: 18px; align-content: start; }
+#ytdlp-workflow-redesign .product .preset-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 9px; }
+#ytdlp-workflow-redesign .product .kind-switch { padding: 0; margin: 0; border: 0; display: flex; flex-wrap: wrap; gap: 18px; }
+#ytdlp-workflow-redesign .product .kind-switch legend { font-size: var(--text-label); color: var(--muted-ink); padding: 0 0 9px; }
+#ytdlp-workflow-redesign .product .kind-switch label { display: flex; align-items: center; gap: 7px; }
+#ytdlp-workflow-redesign .product .quality-value { display: block; background: var(--soft); color: var(--ink); padding: 8px 10px; border-radius: var(--control-radius); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .naming-control > div { display: flex; gap: 8px; }
+#ytdlp-workflow-redesign .product .naming-control .text-button { flex: 0 0 auto; }
+#ytdlp-workflow-redesign .product .output-destination { padding-bottom: 0; }
+#ytdlp-workflow-redesign .product .output-preview, #ytdlp-workflow-redesign .product .task-inspector { background: var(--rail); padding: 18px; border-radius: 7px; min-width: 0; align-self: start; }
+#ytdlp-workflow-redesign .product .preview-cover { width: 112px; margin: 12px 0 18px; font-size: 15px; padding: 8px; }
+#ytdlp-workflow-redesign .product .preview-cover b { font-size: 26px; }
+#ytdlp-workflow-redesign .product .preview-format { font-size: var(--text-focus); font-weight: 600; line-height: 1.4; }
+#ytdlp-workflow-redesign .product .preview-flags, #ytdlp-workflow-redesign .product .scope-note, #ytdlp-workflow-redesign .product .argument-summary { color: var(--muted-ink); font-size: var(--text-note); margin-top: 7px; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .preview-folder { color: var(--ink); font-size: var(--text-value); font-weight: 500; margin-top: 5px; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .preview-rule { height: 1px; background: var(--line); margin: 20px 0 16px; }
+#ytdlp-workflow-redesign .product .filename-example { margin: 5px 0 18px; overflow-wrap: anywhere; font-size: var(--text-value); font-weight: 500; line-height: 1.6; }
+#ytdlp-workflow-redesign .product .queue-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#ytdlp-workflow-redesign .product .queue-tabs { display: flex; gap: 3px; flex-wrap: wrap; }
+#ytdlp-workflow-redesign .product .queue-filter { border: 0; background: transparent; color: var(--muted-ink); padding: 7px 10px; border-radius: var(--control-radius); }
+#ytdlp-workflow-redesign .product .queue-filter[aria-pressed="true"] { background: var(--active); color: var(--brand); }
+#ytdlp-workflow-redesign .product .queue-tool-right { display: flex; align-items: center; gap: 8px; }
+#ytdlp-workflow-redesign .product .group-filter { width: 145px; font-size: 12px; }
+#ytdlp-workflow-redesign .product .queue-group-heading { display: flex; align-items: center; gap: 6px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .queue-group-title { min-width: 0; max-width: 45%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 500; }
+#ytdlp-workflow-redesign .product .queue-group-status { min-width: 0; flex: 1; color: var(--muted-ink); font-size: var(--text-note); }
+#ytdlp-workflow-redesign .product .queue-group-more, #ytdlp-workflow-redesign .product .queue-group-toggle { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .queue-group-menu > strong { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .queue-group-context { display: grid; flex-shrink: 0; gap: 3px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line); font-size: var(--text-note); }
+@container context (max-height:610px) {
+  #ytdlp-workflow-redesign .product .queue-group-context { padding-bottom: 6px; margin-bottom: 6px; }
+  #ytdlp-workflow-redesign .product .queue-group-context:not([hidden]) ~ .task-inspector { gap: 5px; }
+  #ytdlp-workflow-redesign .product .queue-group-context:not([hidden]) ~ .task-inspector dl { gap: 3px 8px; }
+  #ytdlp-workflow-redesign .product .queue-group-context:not([hidden]) ~ .task-inspector .inspector-secondary { display: none; }
+}
+#ytdlp-workflow-redesign .product .queue-select-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 10px; }
+#ytdlp-workflow-redesign .product .queue-total { font-size: 11px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .queue-layout { display: flex; flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .queue-list-pane { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; }
+#ytdlp-workflow-redesign .product .queue-list-pane > :not(.jobs) { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .jobs { position: relative; min-width: 0; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .queue-empty, #ytdlp-workflow-redesign .product .subtitle-empty { padding: 24px 8px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .job { display: grid; grid-template-columns: 18px 58px minmax(0,1fr) auto; gap: 11px; align-items: center; padding: calc(var(--row-space) + 5px) 8px; border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .job.is-selected { background: var(--active); }
+#ytdlp-workflow-redesign .product .job-cover { font-size: 11px; padding: 4px; align-self: start; margin-top: 2px; }
+#ytdlp-workflow-redesign .product .job-cover b { display: none; }
+#ytdlp-workflow-redesign .product .job-content { min-width: 0; }
+#ytdlp-workflow-redesign .product .job-open { border: 0; padding: 0; background: transparent; text-align: left; line-height: 1.45; font-size: 16px; font-weight: 600; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .job-open:hover { color: var(--brand); }
+#ytdlp-workflow-redesign .product .job-meta, #ytdlp-workflow-redesign .product .job-extra { display: block; margin-top: 5px; font-size: var(--text-label); color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .job-output-value { color: var(--ink); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .job-extra { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+#ytdlp-workflow-redesign .product .job-state { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: var(--text-body); font-weight: 500; color: var(--ink); }
+#ytdlp-workflow-redesign .product .job-state.running { color: var(--brand); }
+#ytdlp-workflow-redesign .product .job-state.failed { color: var(--error); }
+#ytdlp-workflow-redesign .product .job-state.done { color: var(--success); }
+#ytdlp-workflow-redesign .product .job-percent { margin-left: auto; color: var(--ink); font-size: 16px; font-weight: 600; line-height: 1.25; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .job-speed { margin-left: auto; color: var(--muted-ink); font-size: var(--text-label); font-weight: 400; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .job-percent + .job-speed { margin-left: 2px; }
+#ytdlp-workflow-redesign .product .download-progress { height: 3px; background: var(--soft); margin-top: 9px; border-radius: 2px; }
+#ytdlp-workflow-redesign .product .download-progress > span { display: block; height: 100%; background: var(--brand); border-radius: 2px; }
+#ytdlp-workflow-redesign .product .job-actions { display: grid; gap: 5px; }
+#ytdlp-workflow-redesign .product .job-action { font-size: 13px; padding: 5px 8px; min-height: 30px; }
+#ytdlp-workflow-redesign .product .job-more { font-size: 12px; padding: 2px 8px; }
+#ytdlp-workflow-redesign .product .task-inspector { align-self: stretch; display: flex; flex-direction: column; gap: 8px; padding: 14px; min-height: 0; }
+#ytdlp-workflow-redesign .product .task-inspector h2 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: var(--text-focus); font-weight: 600; line-height: 1.45; }
+#ytdlp-workflow-redesign .product .detail-status { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; color: var(--ink); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .detail-status[data-status="running"] { color: var(--brand); }
+#ytdlp-workflow-redesign .product .detail-status[data-status="failed"] { color: var(--error); }
+#ytdlp-workflow-redesign .product .detail-status[data-status="done"] { color: var(--success); }
+#ytdlp-workflow-redesign .product .detail-percent { color: var(--ink); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .task-inspector dl { margin: 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 6px 10px; align-items: baseline; }
+#ytdlp-workflow-redesign .product .task-inspector dt { font-size: var(--text-label); color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .task-inspector dd { font-size: var(--text-value); font-weight: 500; margin: 0; }
+#ytdlp-workflow-redesign .product .task-inspector .detail-source { font-size: 13px; font-weight: 400; color: var(--ink); }
+#ytdlp-workflow-redesign .product .task-inspector .edit-job { width: 100%; }
+#ytdlp-workflow-redesign .product .inspector-log { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .task-inspector .detail-error { margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; font-size: var(--text-label); }
+#ytdlp-workflow-redesign .product .log-content > span { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; line-height: 16px; }
+#ytdlp-workflow-redesign .product .truncate-end { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .truncate-path { display: flex; min-width: 0; }
+#ytdlp-workflow-redesign .product .truncate-path > span:first-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; direction: rtl; text-align: left; }
+#ytdlp-workflow-redesign .product .truncate-path > span:last-child { flex: 0 0 auto; }
+#ytdlp-workflow-redesign .product .task-summary .field { margin: 16px 0; }
+#ytdlp-workflow-redesign .product .task-summary textarea { resize: none; }
+#ytdlp-workflow-redesign .product pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; color: var(--muted-ink); margin: 9px 0; }
+#ytdlp-workflow-redesign .product .inspector-log .text-button { padding-left: 0; }
+#ytdlp-workflow-redesign .product .batch-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 12px 0; margin-bottom: 10px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .batch-count { font-size: 12px; }
+#ytdlp-workflow-redesign .product .job-menu { width: 560px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; }
+#ytdlp-workflow-redesign .product .anchored-menu[popover] { position: fixed; inset: auto; margin: 0; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow: auto; overscroll-behavior: contain; color: var(--ink); }
+#ytdlp-workflow-redesign .product .menu-heading, #ytdlp-workflow-redesign .product .finish-countdown { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#ytdlp-workflow-redesign .product .menu-heading strong { font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .menu-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 12px; }
+#ytdlp-workflow-redesign .product .menu-management { display: grid; border-top: 1px solid var(--line); margin-top: 6px; padding-top: 6px; }
+#ytdlp-workflow-redesign .product .finish-countdown { flex-shrink: 0; padding: 8px 14px; background: var(--active); border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .finish-countdown strong { min-width: 0; font-size: var(--text-body); font-weight: 500; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .finish-countdown button { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .finish-action { border: 0; border-top: 1px solid var(--line); margin: 10px 0 0; padding: 10px 0 0; min-width: 0; }
+#ytdlp-workflow-redesign .product .finish-action legend { padding: 0; font-weight: 500; }
+#ytdlp-workflow-redesign .product .finish-action .check-row { margin: 8px 0; }
+#ytdlp-workflow-redesign .product[data-layout="native"] .job { grid-template-columns: 18px 82px minmax(0,1fr) auto; }
+#ytdlp-workflow-redesign .product .scheme-layout { display: grid; grid-template-columns: 174px minmax(0,1fr); gap: 26px; }
+#ytdlp-workflow-redesign .product .scheme-list { border-right: 1px solid var(--line); padding-right: 18px; }
+#ytdlp-workflow-redesign .product .scheme-button { display: block; width: 100%; padding: 10px; margin-top: 8px; border: 0; border-radius: var(--control-radius); background: transparent; text-align: left; font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .scheme-button small { display: block; margin-top: 3px; }
+#ytdlp-workflow-redesign .product .scheme-button[aria-pressed="true"] { background: var(--active); color: var(--ink); font-weight: 600; }
+#ytdlp-workflow-redesign .product .saved-heading { margin-top: 24px; }
+#ytdlp-workflow-redesign .product .saved-naming:empty::after { content: "尚无保存方案"; display: block; color: var(--muted-ink); font-size: 11px; margin-top: 10px; }
+#ytdlp-workflow-redesign .product .field-palette { display: grid; gap: 16px; margin: 16px 0 24px; }
+#ytdlp-workflow-redesign .product .palette-group { display: grid; grid-template-columns: 62px minmax(0,1fr); align-items: start; gap: 12px; }
+#ytdlp-workflow-redesign .product .palette-label { margin: 6px 0 0; font-size: var(--text-label); font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .field-options { display: flex; flex-wrap: wrap; gap: 7px; }
+#ytdlp-workflow-redesign .product .field-palette .button { font-size: 13px; min-height: 31px; padding: 5px 9px; background: transparent; }
+#ytdlp-workflow-redesign .product .field-palette .button:hover { background: var(--soft); }
+#ytdlp-workflow-redesign .product .name-separator { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: flex-end; }
+#ytdlp-workflow-redesign .product .name-separator > label { display: grid; gap: 6px; font-size: var(--text-label); color: var(--muted-ink); min-width: 105px; }
+#ytdlp-workflow-redesign .product .name-separator select { color: var(--ink); }
+#ytdlp-workflow-redesign .product .name-order-area, #ytdlp-workflow-redesign .product .name-preview-area { margin: 22px 0; padding: 16px 0; border-top: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .name-tokens { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; min-height: 29px; }
+#ytdlp-workflow-redesign .product .name-token { display: inline-flex; align-items: center; gap: 8px; padding: 5px 9px; border-radius: 4px; background: var(--active); color: var(--ink); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .name-token > small { color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .name-preview-value { margin: 8px 0; font-size: 16px; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .scheme-hint { color: var(--muted-ink); font-size: 12px; margin: 16px 0; }
+#ytdlp-workflow-redesign .product .settings-layout { display: grid; grid-template-columns: 128px minmax(0,1fr); gap: 28px; flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .settings-nav { display: flex; flex-direction: column; gap: 5px; border-right: 1px solid var(--line); padding-right: 18px; align-self: start; }
+#ytdlp-workflow-redesign .product .settings-link { border: 0; background: transparent; text-align: left; padding: 9px; border-radius: var(--control-radius); color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .settings-link[aria-pressed="true"] { background: var(--active); color: var(--brand); }
+#ytdlp-workflow-redesign .product .settings-groups { min-width: 0; }
+#ytdlp-workflow-redesign .product .settings-category { max-width: 700px; }
+#ytdlp-workflow-redesign .product .cookie-browser, #ytdlp-workflow-redesign .product .cookie-file { display: grid; gap: 17px; }
+#ytdlp-workflow-redesign .product .default-output-summary { font-size: var(--text-value); font-weight: 500; line-height: 1.6; }
+#ytdlp-workflow-redesign .product .default-output-value { font-size: 16px; font-weight: 600; }
+#ytdlp-workflow-redesign .product .default-output-flags { font-size: var(--text-label); font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .default-output-naming { display: block; margin-top: 6px; font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .settings-category > .check-row { margin: 17px 0; }
+#ytdlp-workflow-redesign .product .component-item { padding: 16px 0; border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .component-item:first-child { padding-top: 0; }
+#ytdlp-workflow-redesign .product .component-item:last-child { border-bottom: 0; }
+#ytdlp-workflow-redesign .product .component-heading { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+#ytdlp-workflow-redesign .product .component-name { font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .component-version { color: var(--ink); font-size: 13px; margin: 6px 0; }
+#ytdlp-workflow-redesign .product .component-state { color: var(--ink); font-size: var(--text-body); font-weight: 500; margin: 6px 0; }
+#ytdlp-workflow-redesign .product .component-state.error { color: var(--error); }
+#ytdlp-workflow-redesign .product .component-state:empty { margin: 0; }
+#ytdlp-workflow-redesign .product .component-effective-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#ytdlp-workflow-redesign .product .component-list { min-width: 0; }
+#ytdlp-workflow-redesign .product .component-update-details { white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; font-size: 12px; }
+#ytdlp-workflow-redesign .product .component-update-progress { width: 100%; height: 8px; }
+#ytdlp-workflow-redesign .product .component-update-notice { color: var(--brand); max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#ytdlp-workflow-redesign .product .component-name[aria-pressed="true"] { color: var(--brand); }
+#ytdlp-workflow-redesign .product .theme-preview { background: var(--active); padding: 15px; border-radius: var(--control-radius); }
+#ytdlp-workflow-redesign .product .theme-preview span { display: block; margin-top: 7px; font-size: 12px; }
+#ytdlp-workflow-redesign .product .file-button { position: relative; display: inline-flex; align-items: center; overflow: hidden; }
+#ytdlp-workflow-redesign .product .file-button input { position: absolute; inset: 0; opacity: 0; width: 100%; }
+#ytdlp-workflow-redesign .product .shortcut-list { display: grid; grid-template-columns: minmax(95px,130px) minmax(0,1fr); gap: 12px; font-size: 12px; }
+#ytdlp-workflow-redesign .product .shortcut-list dd { margin: 0; color: var(--muted-ink); overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .about-license, #ytdlp-workflow-redesign .product .about-lucide-license { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 Consolas,monospace; }
+#ytdlp-workflow-redesign .product .blank-config-confirm { padding: 15px; margin-top: 16px; background: var(--rail); border-radius: var(--control-radius); }
+#ytdlp-workflow-redesign .product .blank-config-confirm .action-pair { margin-top: 12px; }
+#ytdlp-workflow-redesign .product .output-form, #ytdlp-workflow-redesign .product .settings-groups, #ytdlp-workflow-redesign .product .form-scroll, #ytdlp-workflow-redesign .product .detail-panel { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+#ytdlp-workflow-redesign .product .form-scroll, #ytdlp-workflow-redesign .product .detail-panel { flex: 1; }
+#ytdlp-workflow-redesign .product .output-preview { align-self: stretch; display: flex; flex-direction: column; }
+#ytdlp-workflow-redesign .product .output-preview > * { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .preview-details { margin-top: auto; }
+#ytdlp-workflow-redesign .product .preview-details .menu-body { width: 560px; }
+#ytdlp-workflow-redesign .product .detail-panel { max-width: 780px; }
+#ytdlp-workflow-redesign .product .media-facts { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted-ink); margin-bottom: 22px; }
+#ytdlp-workflow-redesign .product .format-cover { width: 88px; padding: 7px; font-size: 13px; }
+#ytdlp-workflow-redesign .product .stream-group { margin-top: 23px; }
+#ytdlp-workflow-redesign .product .stream-row { border-bottom: 1px solid var(--line); padding: 11px 0; }
+#ytdlp-workflow-redesign .product .stream-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+#ytdlp-workflow-redesign .product .stream-heading label { display: flex; gap: 9px; align-items: center; min-width: 0; }
+#ytdlp-workflow-redesign .product .stream-heading span { color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .stream-row > details { margin-top: 7px; }
+#ytdlp-workflow-redesign .product .stream-row summary { font-size: 12px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .tech-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px 16px; margin: 12px 0; }
+#ytdlp-workflow-redesign .product .tech-grid div { display: flex; gap: 7px; justify-content: space-between; font-size: 12px; }
+#ytdlp-workflow-redesign .product .tech-grid dt { color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .tech-grid dd { margin: 0; font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .section-list { display: grid; gap: 8px; margin: 18px 0; }
+#ytdlp-workflow-redesign .product .section-row { display: flex; align-items: center; gap: 12px; justify-content: space-between; border-bottom: 1px solid var(--line); padding: 10px 0; }
+#ytdlp-workflow-redesign .product .section-error { margin-top: 10px; color: var(--error); font-size: 12px; }
+#ytdlp-workflow-redesign .product .metadata-tree { margin: 18px 0; font: 12px/1.7 Consolas,monospace; background: var(--rail); border-radius: var(--control-radius); padding: 12px; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .metadata-tree details { padding-left: 10px; }
+#ytdlp-workflow-redesign .product .metadata-value { display: block; text-align: left; width: 100%; font: inherit; background: transparent; border: 0; padding: 4px; white-space: normal; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .metadata-value[aria-pressed="true"] { color: var(--brand); background: var(--active); }
+#ytdlp-workflow-redesign .product .full-log, #ytdlp-workflow-redesign .product .changes-content { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--rail); color: var(--ink); border-radius: var(--control-radius); padding: 16px; font: 12px/1.8 Consolas,monospace; margin: 18px 0; }
+#ytdlp-workflow-redesign .product .full-log.is-highlighted .log-error { color: var(--error); }
+#ytdlp-workflow-redesign .product .full-log.is-highlighted .log-phase { color: var(--brand); }
+#ytdlp-workflow-redesign .product .desktop-footer { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 15px; padding: 8px 14px; font-size: 11px; background: var(--rail); color: var(--muted-ink); border-top: 1px solid var(--line); border-radius: 0 0 9px 9px; }
+#ytdlp-workflow-redesign .product .feedback { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .context-sidebar { display: flex; flex-direction: column; min-height: 0; min-width: 0; padding: 20px 16px; background: var(--rail); border-left: 1px solid var(--line); container-type: size; container-name: context; }
+#ytdlp-workflow-redesign .product .context-heading { flex-shrink: 0; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--line); font-size: var(--text-body); font-weight: 500; }
+#ytdlp-workflow-redesign .product .context-pane { display: flex; flex-direction: column; flex: 1; gap: 8px; min-height: 0; min-width: 0; padding: 0; background: transparent; border-radius: 0; }
+#ytdlp-workflow-redesign .product .context-pane > * { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .context-pane dl { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: baseline; gap: 8px 10px; margin: 0; }
+#ytdlp-workflow-redesign .product .context-pane dt { color: var(--muted-ink); font-size: var(--text-label); }
+#ytdlp-workflow-redesign .product .context-pane dd { min-width: 0; margin: 0; font-size: var(--text-value); font-weight: 500; }
+#ytdlp-workflow-redesign .product .context-note, #ytdlp-workflow-redesign .product .context-validation { font-size: var(--text-note); color: var(--muted-ink); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .context-validation[role="alert"] { color: var(--error); }
+#ytdlp-workflow-redesign .product .context-details { margin-top: auto; }
+#ytdlp-workflow-redesign .product .context-details .menu-body { width: 560px; }
+#ytdlp-workflow-redesign .product .context-details textarea { resize: none; }
+#ytdlp-workflow-redesign .product .context-arguments { margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .context-pane .source-heading { margin: 0 0 8px; }
+#ytdlp-workflow-redesign .product .context-pane .source-tag { display: none; }
+#ytdlp-workflow-redesign .product .context-pane .name-preview-area { margin: 0; padding: 0; border: 0; }
+#ytdlp-workflow-redesign .product .context-pane .name-preview-value { margin: 4px 0; }
+#ytdlp-workflow-redesign .product .context-pane .preview-cover { width: 80px; margin: 0; }
+#ytdlp-workflow-redesign .product .context-pane .preview-format { font-size: var(--text-value); }
+#ytdlp-workflow-redesign .product .context-pane .preview-rule { margin: 2px 0; }
+#ytdlp-workflow-redesign .product .context-pane .filename-example, #ytdlp-workflow-redesign .product .context-pane .preview-folder { margin: 0; }
+#ytdlp-workflow-redesign .product .context-pane .preview-flags, #ytdlp-workflow-redesign .product .context-pane .scope-note { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .context-pane .argument-summary { display: none; }
+#ytdlp-workflow-redesign .product .context-pane .task-context-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+#ytdlp-workflow-redesign .product .context-pane .inspector-log { margin-top: auto; }
+@container context (max-height:550px) {
+  #ytdlp-workflow-redesign .product .context-pane { gap: 6px; }
+  #ytdlp-workflow-redesign .product .context-pane dl { gap: 5px 8px; }
+  #ytdlp-workflow-redesign .product .context-pane .preview-cover { width: 64px; }
+  #ytdlp-workflow-redesign .product .context-heading { margin-bottom: 10px; padding-bottom: 8px; }
+}
+@container context (max-height:500px) {
+  #ytdlp-workflow-redesign .product .context-heading { margin-bottom: 6px; padding-bottom: 4px; }
+  #ytdlp-workflow-redesign .product .context-pane .inspector-log { padding-top: 4px; }
+  #ytdlp-workflow-redesign .product .context-pane .log-content { margin: 4px 0; }
+}
+#ytdlp-workflow-redesign .product .input-results .menu-body { width: 560px; }
+#ytdlp-workflow-redesign .product .input-results > summary { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .channel-pickers { max-height: 80px; overflow: auto; overscroll-behavior: contain; }
+@media (max-width:1083px), (max-height:640px) {
+  #ytdlp-workflow-redesign .product .main-area > .view { min-width: 560px; min-height: 510px; }
+}
+@media (max-height:720px) {
+  #ytdlp-workflow-redesign .product .main-area { padding-top: 20px; padding-bottom: 20px; }
+  #ytdlp-workflow-redesign .product .page-top { margin-bottom: 12px; }
+  #ytdlp-workflow-redesign .product h1 { margin-top: 2px; margin-bottom: 4px; }
+  #ytdlp-workflow-redesign .product .input-results > summary { padding: 6px 0; }
+  #ytdlp-workflow-redesign .product .source-heading { margin: 6px 0; }
+  #ytdlp-workflow-redesign .product .range-bar { padding: 6px 0; }
+  #ytdlp-workflow-redesign .product .view-actions { padding-top: 6px; margin-top: 6px; }
+}
+@media (pointer:coarse) {
+  #ytdlp-workflow-redesign .product button, #ytdlp-workflow-redesign .product .check-row, #ytdlp-workflow-redesign .product summary { min-height: 44px; }
+  #ytdlp-workflow-redesign .product input[type="text"], #ytdlp-workflow-redesign .product select, #ytdlp-workflow-redesign .product textarea { font-size: 16px; }
+}
+
+</style><style>html{color-scheme:light dark;height:100%;overflow:hidden;overscroll-behavior:none}body{margin:0;height:100%;overflow:hidden}#ytdlp-workflow-redesign{height:100%}#ytdlp-workflow-redesign .product{border:0;border-radius:0}#ytdlp-workflow-redesign .main-area{overflow:auto;overscroll-behavior:contain}#ytdlp-workflow-redesign .cover img{width:100%;height:100%;object-fit:cover}#ytdlp-workflow-redesign .advanced-options{opacity:.6}</style>
+<link rel="stylesheet" href="workbench.css">
+</head><body><div id="ytdlp-workflow-redesign">
+<template id="ytdlp-redesign-window">
+  <header class="desktop-bar"><div class="workbench-brand"><span class="workbench-brand-mark"><i data-lucide="arrow-down-to-line" aria-hidden="true"></i></span><div><strong data-workbench-text="brand"></strong><small>yt-dlp · <span data-workbench-text="desktop"></span></small></div></div><div class="workbench-location"><span class="workbench-breadcrumb"></span><strong class="workbench-page-name"></strong></div><button type="button" class="button primary" data-go="source"><i data-lucide="plus" aria-hidden="true"></i><span data-workbench-text="new_download"></span></button><span class="window-actions" aria-hidden="true">−   □   ×</span></header>
+  <div class="app-body">
+    <nav class="app-nav" data-workbench-label="navigation">
+      <div class="nav-scroll">
+      <div class="nav-group-label" data-workbench-text="workspace"></div>
+      <button type="button" class="nav-button cursor-interaction" data-go="home"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span data-workbench-text="home"></span></button>
+      <button type="button" class="nav-button cursor-interaction" data-go="queue"><i data-lucide="list-video" aria-hidden="true"></i>下载任务<span class="queue-count">4</span></button>
+      <div class="nav-group-label nav-settings-heading"><i data-lucide="settings-2" aria-hidden="true"></i><span data-workbench-text="settings"></span></div>
+      <div class="settings-nav" role="group" data-workbench-label="settings_navigation"><button type="button" class="settings-link cursor-interaction" data-settings="appearance" aria-pressed="true">常规</button><button type="button" class="settings-link cursor-interaction" data-settings="queue">下载</button><button type="button" class="settings-link cursor-interaction" data-settings="network">网络与认证</button><button type="button" class="settings-link cursor-interaction" data-settings="sponsor">内容处理</button><button type="button" class="settings-link cursor-interaction" data-settings="updates">组件与更新</button><button type="button" class="settings-link cursor-interaction" data-settings="presets">高级</button><button type="button" class="settings-link cursor-interaction" data-settings="about">关于</button></div>
+      </div>
+      <div class="nav-engine"><span></span>下载组件就绪</div>
+    </nav>
+    <div class="main-area">
+      <section class="view workbench-home" data-page="home" hidden>
+        <header class="page-top"><div><span class="eyebrow">OVERVIEW</span><h1 data-workbench-text="headline"></h1><p data-workbench-text="home_description"></p></div></header>
+        <section class="workbench-input workbench-card"><h2 data-workbench-text="add_media"></h2><p class="small-note" data-workbench-text="input_description"></p><form class="workbench-source-form"><label class="workbench-link-box"><i data-lucide="link" aria-hidden="true"></i><textarea class="workbench-url" rows="2" data-workbench-placeholder="url_placeholder" data-workbench-label="source_url"></textarea></label><button type="submit" class="button primary" data-workbench-text="parse"></button></form><p class="small-note" data-workbench-text="input_hint"></p></section>
+        <div class="workbench-section-heading"><h2 data-workbench-text="task_overview"></h2><button type="button" class="text-button" data-go="queue"><span data-workbench-text="all_tasks"></span><i data-lucide="chevron-right" aria-hidden="true"></i></button></div>
+        <div class="workbench-metrics"><div class="workbench-card"><span data-workbench-text="running"></span><strong data-workbench-count="active">0</strong><small data-workbench-text="running_note"></small></div><div class="workbench-card"><span data-workbench-text="waiting"></span><strong data-workbench-count="waiting">0</strong><small data-workbench-text="waiting_note"></small></div><div class="workbench-card"><span data-workbench-text="needs_attention"></span><strong data-workbench-count="needs">0</strong><small data-workbench-text="needs_note"></small></div><div class="workbench-card"><span data-workbench-text="session_done"></span><strong data-workbench-count="done">0</strong><small data-workbench-text="done_note"></small></div></div>
+        <div class="workbench-section-heading"><h2 data-workbench-text="continue"></h2></div>
+        <div class="workbench-lower"><section class="workbench-card workbench-activity" data-workbench-label="continue"></section><section class="workbench-card workbench-defaults"><div class="section-heading"><h2 data-workbench-text="current_defaults"></h2><span class="workbench-badge" data-workbench-text="future_tasks"></span></div><dl><dt data-workbench-text="output"></dt><dd class="workbench-default-output"></dd><dt data-workbench-text="folder"></dt><dd class="workbench-default-folder"></dd><dt data-workbench-text="concurrency"></dt><dd class="workbench-default-concurrency"></dd></dl><p class="small-note" data-workbench-text="defaults_note"></p><button type="button" class="button workbench-manage-defaults" data-workbench-text="manage_defaults"></button></section></div>
+      </section>
+      <section class="view" data-page="source">
+          <header class="page-top"><div><span class="eyebrow">添加下载 · 1 / 2</span><h1>添加下载</h1><p>粘贴链接，选择想下载的内容。</p></div><span class="step-label">选择内容 → 设置输出</span></header>
+          <div class="link-area" data-feature="S01 S02 S07"><label class="link-box"><i data-lucide="link" aria-hidden="true"></i><textarea rows="2" aria-label="视频、作者主页或播放列表链接" placeholder="粘贴或拖入网页链接；多个链接每行一条">https://www.youtube.com/@DesignNotes</textarea></label><button type="button" class="button primary analyze-link cursor-interaction">解析链接</button></div>
+          <div class="source-state" role="status" aria-live="polite" data-feature="S05">支持视频、频道和播放列表；也可拖入网页链接。</div>
+          <div class="selection-tools" data-feature="S03 S08"><label>频道内容<select class="channel-tab" aria-label="频道内容"><option value="videos">视频</option><option value="shorts">Shorts</option><option value="streams">直播</option></select></label><span class="source-count">6 个可下载 · 不可用条目会略过</span></div>
+          <div class="source-heading"><div class="source-avatar" aria-hidden="true">D</div><div><h2>Design Notes</h2><p>YouTube 频道 · 6 个可选视频</p></div><span class="source-tag">示例来源</span></div>
+          <div class="selection-tools"><div><button type="button" class="text-button select-all cursor-interaction">全选</button><button type="button" class="text-button select-none cursor-interaction">全不选</button><button type="button" class="text-button toggle-range cursor-interaction" aria-expanded="false">选择范围</button></div><span class="selected-count">已选 0 / 6</span></div>
+          <div class="range-bar" hidden><label>视频序号<input type="text" class="range-input" aria-label="选择范围" placeholder="例如 1-3,5"></label><button type="button" class="button apply-range cursor-interaction">勾选范围</button></div>
+          <div class="candidate-list" aria-label="可下载视频">
+            <label class="candidate cursor-interaction" data-video="0"><input type="checkbox" aria-label="选择网格与排版：让信息更清晰"><span class="cover art-grid" role="img" aria-label="示例封面：网格与排版"><span>GRID<br>SYSTEMS</span><b>↗</b></span><span class="video-info"><strong>网格与排版：让信息更清晰</strong><span>Design Notes · 12:48</span></span><span class="video-index">01</span></label>
+            <label class="candidate cursor-interaction" data-video="1"><input type="checkbox" aria-label="选择留白不是空白：界面的呼吸感"><span class="cover art-space" role="img" aria-label="示例封面：留白"><span>White<br>space.</span><b>02</b></span><span class="video-info"><strong>留白不是空白：界面的呼吸感</strong><span>Design Notes · 09:24</span></span><span class="video-index">02</span></label>
+            <label class="candidate cursor-interaction" data-video="2"><input type="checkbox" aria-label="选择复杂功能怎样变成清晰的界面"><span class="cover art-clear" role="img" aria-label="示例封面：清晰界面"><span>MAKE<br>IT CLEAR</span><b>+</b></span><span class="video-info"><strong>复杂功能怎样变成清晰的界面</strong><span>Design Notes · 18:06</span></span><span class="video-index">03</span></label>
+            <label class="candidate cursor-interaction" data-video="3"><input type="checkbox" aria-label="选择色彩与留白：日常设计练习"><span class="cover art-color" role="img" aria-label="示例封面：色彩练习"><span>COLOUR<br>IN USE</span><b>●</b></span><span class="video-info"><strong>色彩与留白：日常设计练习</strong><span>Design Notes · 08:32</span></span><span class="video-index">04</span></label>
+            <label class="candidate cursor-interaction" data-video="4"><input type="checkbox" aria-label="选择界面布局与信息层级"><span class="cover art-motion" role="img" aria-label="示例封面：信息层级"><span>LAYOUT<br>NOTES</span><b>▤</b></span><span class="video-info"><strong>界面布局与信息层级</strong><span>Design Notes · 14:15</span></span><span class="video-index">05</span></label>
+            <label class="candidate cursor-interaction" data-video="5"><input type="checkbox" aria-label="选择原型设计中的交互反馈"><span class="cover art-workflow" role="img" aria-label="示例封面：设计流程"><span>DESIGN<br>WORKFLOW</span><b>↳</b></span><span class="video-info"><strong>原型设计中的交互反馈</strong><span>Design Notes · 11:20</span></span><span class="video-index">06</span></label>
+          </div>
+          <footer class="view-actions"><span class="selection-hint">请选择要下载的视频</span><button type="button" class="button primary next-output cursor-interaction" disabled>下一步：设置输出 <i data-lucide="arrow-right" aria-hidden="true"></i></button></footer>
+        </section>
+      <section class="view" data-page="output" hidden>
+        <header class="page-top"><div><span class="eyebrow output-target">添加下载 · 2 / 2</span><h1>设置输出</h1><p class="output-scope">本次选择的 3 个视频</p></div><button type="button" class="text-button output-back cursor-interaction" data-go="source"><i data-lucide="arrow-left" aria-hidden="true"></i>返回选择</button></header>
+        <div class="output-layout">
+          <div class="output-form">
+            <div class="preset-row" data-feature="O01 P08"><label class="field"><span>下载方案</span><select class="preset-select" aria-label="下载方案"><option value="mp4">1080p 视频（MP4）</option><option value="m4a">有封面 M4A 音频</option><option value="mp3" selected>有封面 MP3 音频</option><option value="custom">自定义设置</option></select></label><details class="scheme-actions"><summary class="text-button cursor-interaction">方案操作</summary><div class="menu-body"><button type="button" class="menu-item save-arguments cursor-interaction">保存当前参数组合</button><button type="button" class="menu-item reset-arguments cursor-interaction" data-feature="P09">重新开始参数组合</button></div></details></div>
+            <fieldset class="kind-switch" data-feature="P01"><legend>下载内容</legend><label class="cursor-interaction"><input type="radio" name="download-kind" value="video"><i data-lucide="video" aria-hidden="true"></i>视频 + 音频</label><label class="cursor-interaction"><input type="radio" name="download-kind" value="audio" checked><i data-lucide="music-2" aria-hidden="true"></i>音频</label></fieldset>
+            <div class="two-fields" data-feature="O02 O03 O04"><label class="field"><span>文件格式</span><select class="format-select" aria-label="文件格式"><option value="mp3">MP3</option></select></label><label class="field quality-field"><span class="quality-label">音频质量</span><span class="quality-value">高质量</span><select class="quality-select" aria-label="视频清晰度上限" hidden></select><select class="audio-treatment" aria-label="M4A音轨处理" hidden><option value="native">优先原始 M4A 音轨</option><option value="convert">转换为 M4A</option></select></label></div>
+            <p class="raw-format-state small-note" hidden>当前使用自定义格式参数</p>
+            <div class="check-group compact-checks" data-feature="O12 P05"><label class="check-row cursor-interaction"><input type="checkbox" class="cover-check" checked><span>嵌入封面</span></label><label class="check-row cursor-interaction"><input type="checkbox" class="metadata-check" checked><span>写入媒体信息</span></label></div>
+            <section class="form-section output-destination"><h2>保存与命名</h2>
+              <div class="field full" data-feature="O13"><span>保存目录</span><div class="input-actions"><input type="text" class="folder-input" aria-label="下载目录" value="系统下载文件夹"><button type="button" class="button choose-folder cursor-interaction">选择</button><details class="folder-actions"><summary class="text-button cursor-interaction">历史</summary><div class="menu-body"><select class="folder-history" aria-label="目录历史"><option>系统下载文件夹</option></select><button type="button" class="menu-item clear-folders cursor-interaction">清空目录历史</button></div></details></div></div>
+              <div class="field full naming-control"><span>文件命名</span><div><select class="naming-select" aria-label="命名方案"><option value="title">标题</option><option value="author" selected>上传者 - 标题</option><option value="date">上传日期 - 上传者 - 标题</option><option value="custom">当前自定义方案</option></select><button type="button" class="text-button cursor-interaction" data-go="naming">编辑规则</button></div></div>
+              <label class="field grouping-field"><span>多个视频加入队列时</span><select class="grouping-select" aria-label="入队方式"><option value="collection">保留为一个集合任务</option><option value="individual">每个视频作为独立任务</option></select></label>
+            </section>
+            <div class="advanced-options">
+              <details class="advanced-block" data-accordion="output" data-output-section="subtitles" data-feature="P02"><summary class="cursor-interaction"><span>字幕</span><span class="section-value subtitle-summary">沿用当前设置</span></summary><div class="advanced-body"><label class="field"><span>字幕语言</span><select class="subtitle-select" aria-label="字幕语言"><option value="keep">沿用当前设置</option><option value="zh">中文字幕（人工）</option><option value="zh-auto">中文字幕（含自动生成）</option><option value="zh-en">中文和英文字幕</option><option value="all">所有语言字幕</option></select></label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="embedSubs">嵌入字幕到媒体文件</label><button type="button" class="text-button cursor-interaction" data-panel="subtitles">选择此视频的字幕轨道</button><span class="single-video-hint small-note" hidden>集合需拆成独立任务后选择轨道。</span></div></details>
+              <details class="advanced-block" data-accordion="output" data-output-section="formats" data-feature="O05 O06 O07"><summary class="cursor-interaction"><span>格式与音轨</span><span class="section-value format-summary">自动选择</span></summary><div class="advanced-body"><div class="two-fields"><label class="field"><span>视频编码偏好</span><select data-choice="videoCodec" aria-label="视频编码偏好"></select></label><label class="field"><span>音频编码偏好</span><select data-choice="audioCodec" aria-label="音频编码偏好"></select></label></div><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-extra="higherFps">同清晰度优先高帧率</label><label class="check-row cursor-interaction"><input type="checkbox" data-extra="premium">1080p 优先增强码率</label></div><button type="button" class="text-button cursor-interaction" data-panel="formats">手选此视频的格式与音轨</button><span class="single-video-hint small-note" hidden>集合需拆成独立任务后手选格式。</span></div></details>
+              <details class="advanced-block" data-accordion="output" data-output-section="processing" data-feature="O08 O09 O10 O11 P03 P04"><summary class="cursor-interaction"><span>下载与处理</span><span class="section-value processing-summary">独立规则</span></summary><div class="advanced-body"><div class="two-fields"><label class="field"><span>失败重试</span><select class="retry-select" aria-label="失败重试"><option value="default">默认</option><option value="3">3 次</option><option value="10" selected>10 次</option><option value="30">30 次</option><option value="infinite">持续重试</option></select></label><label class="field"><span>分片并发</span><select class="concurrency-select" aria-label="分片并发"><option value="default">默认</option><option value="1">1 个分片</option><option value="4" selected>4 个分片</option><option value="8">8 个分片</option><option value="16">16 个分片</option></select></label></div><div class="two-fields"><label class="field"><span>下载限速</span><div class="input-actions"><input type="number" min="0" step="0.1" data-extra="rate" aria-label="下载限速" placeholder="不限"><select data-extra="rateUnit" aria-label="限速单位"><option>KB/s</option><option selected>MB/s</option></select></div><small>0 或空表示不限速</small></label><label class="field"><span>章节处理</span><select data-extra="chapters" aria-label="章节处理"><option value="ignore">忽略章节</option><option value="embed">嵌入章节</option><option value="split">按章节拆分文件</option></select></label></div><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-extra="keyframes">截取处强制关键帧<small>需要重编码，处理较慢</small></label><label class="check-row cursor-interaction"><input type="checkbox" data-extra="writeTime" checked>文件时间使用写入时间</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="liveStart">从直播开始处下载</label></div><button type="button" class="text-button cursor-interaction" data-panel="sections">设置此视频的下载时间段</button><span class="single-video-hint small-note" hidden>集合需拆成独立任务后截取时间段。</span></div></details>
+              <details class="advanced-block" data-accordion="output" data-output-section="files" data-feature="P05"><summary class="cursor-interaction"><span>文件与附加信息</span><span class="section-value files-summary">保留同名文件</span></summary><div class="advanced-body"><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-flag="keepFiles" checked>保留同名文件</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="windowsNames" checked>使用 Windows 兼容文件名</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="singleVideo">链接指向集合时只下载当前视频</label></div><div class="compact-checks"><label class="check-row cursor-interaction"><input type="checkbox" data-flag="saveCover">另存封面图片</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="saveInfo">另存信息 JSON</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="saveDescription">另存视频描述</label><label class="check-row cursor-interaction"><input type="checkbox" data-flag="saveComments">保存评论</label></div><button type="button" class="text-button current-filename cursor-interaction" data-panel="filename" hidden>覆盖当前任务文件名</button></div></details>
+              <details class="advanced-block raw-arguments" data-accordion="output" data-output-section="raw" data-feature="P06 P07 P09"><summary class="cursor-interaction"><span>自定义 yt-dlp 参数</span><span class="section-value raw-summary">未指定</span></summary><div class="advanced-body"><label class="check-row cursor-interaction"><input type="checkbox" class="raw-enabled" checked>启用自定义参数</label><label class="field"><span>参数</span><textarea class="raw-input" rows="3" aria-label="原有自定义参数" placeholder="例如 --retries 7"></textarea></label><p class="small-note raw-preserve">未编辑的自定义参数保持原值。</p><details class="advanced-block"><summary class="cursor-interaction">参数历史</summary><div class="advanced-body"><div class="two-fields"><label class="field"><span>已保存参数</span><select class="raw-history" aria-label="参数历史"><option value="">选择已保存参数</option></select></label><label class="field"><span>参数标签</span><input type="text" class="raw-label" aria-label="参数标签" placeholder="可留空"></label></div><div class="action-pair"><button type="button" class="button raw-save cursor-interaction">保存 / 更新标签</button><button type="button" class="text-button raw-delete cursor-interaction">移除历史项</button></div></div></details><label class="field"><span>组合后的参数</span><textarea class="command-preview" aria-label="组合后的参数预览" rows="3" readonly></textarea></label></div></details>
+            </div>
+          </div>
+          <aside class="output-preview" aria-label="输出预览"><span class="eyebrow preview-target">本次输出</span><div class="cover art-grid preview-cover" role="img" aria-label="输出文件封面示例"><span>GRID<br>SYSTEMS</span><b>↗</b></div><h2 class="preview-format">3 个 MP3 音频</h2><p class="preview-flags">嵌入封面 · 媒体信息</p><div class="preview-rule"></div><span class="small-label">文件名</span><div class="filename-example">Design Notes - 网格与排版.mp3</div><span class="small-label">保存到</span><p class="preview-folder">系统下载文件夹</p><div class="preview-rule"></div><p class="argument-summary">重试 10 次 · 4 个分片</p><p class="scope-note">仅本次下载</p></aside>
+        </div>
+        <footer class="view-actions" data-feature="P10"><span class="output-count">已选 3 个视频</span><div class="action-pair"><button type="button" class="text-button cancel-arguments cursor-interaction">取消</button><button type="button" class="text-button download-button cursor-interaction">立即下载</button><button type="button" class="button primary enqueue-button cursor-interaction">加入队列</button></div></footer>
+      </section>
+      <section class="view" data-page="queue" hidden>
+        <header class="page-top"><div><span class="eyebrow">工作区</span><h1>下载任务</h1><p class="queue-caption">1 个下载中 · 1 个处理中</p></div><button type="button" class="button primary cursor-interaction" data-go="source"><i data-lucide="plus" aria-hidden="true"></i>添加下载</button></header>
+        <div class="queue-tools">
+          <div class="queue-tabs" role="group" aria-label="任务视图"><button type="button" class="queue-filter cursor-interaction" data-filter="all" aria-pressed="true">全部</button><button type="button" class="queue-filter cursor-interaction" data-filter="active" aria-pressed="false">进行中</button><button type="button" class="queue-filter cursor-interaction" data-filter="done" aria-pressed="false">已完成</button></div>
+          <div class="queue-tool-right"><select class="group-filter" aria-label="队列分组"><option value="all">全部分组</option><option value="collection">Design Notes</option><option value="single">独立任务</option></select><details class="queue-operations" data-feature="Q16 Q17 Q18 Q23 Q24 Q25 O17"><summary class="text-button cursor-interaction">更多</summary><div class="menu-body"><label class="field"><span>操作范围</span><select class="queue-scope" aria-label="队列操作范围"><option value="all">整个队列</option><option value="group">当前分组</option></select></label><div class="menu-action-list"><button type="button" class="menu-item cursor-interaction" data-batch="start" data-all="true">开始此范围任务</button><button type="button" class="menu-item cursor-interaction" data-batch="stop" data-all="true">停止此范围任务</button><button type="button" class="menu-item cursor-interaction" data-batch="clearDone" data-all="true">清理已完成</button><button type="button" class="menu-item cursor-interaction" data-batch="remove" data-all="true">移除此范围任务</button><button type="button" class="menu-item copy-options cursor-interaction">复制当前任务处理选项到全部任务</button></div><fieldset class="finish-action" data-feature="Q25"><legend data-finish-text="completion_options"></legend><label class="check-row cursor-interaction"><input type="radio" name="finish-action" value="none" checked><span data-finish-text="completion_action.none"></span></label><label class="check-row cursor-interaction"><input type="radio" name="finish-action" value="exit"><span data-finish-text="completion_action.exit"></span></label><label class="check-row cursor-interaction"><input type="radio" name="finish-action" value="sleep"><span data-finish-text="completion_action.sleep"></span></label><label class="check-row cursor-interaction"><input type="radio" name="finish-action" value="hibernate"><span data-finish-text="completion_action.hibernate"></span></label><p class="small-note finish-current"></p><p class="small-note" data-finish-text="completion_protection"></p></fieldset><details class="advanced-block queue-display"><summary class="cursor-interaction">列表显示</summary><div class="advanced-body compact-checks"><label class="check-row cursor-interaction"><input type="checkbox" data-column="format">格式</label><label class="check-row cursor-interaction"><input type="checkbox" data-column="note">格式说明</label><label class="check-row cursor-interaction"><input type="checkbox" data-column="ext">扩展名</label><label class="check-row cursor-interaction"><input type="checkbox" data-column="size">文件大小</label><label class="check-row cursor-interaction"><input type="checkbox" class="site-icon" checked>网站图标</label><label class="check-row cursor-interaction"><input type="checkbox" class="site-text" checked>网站文字</label></div></details></div></details></div>
+        </div>
+        <div class="queue-select-row" data-feature="Q19"><label class="check-row cursor-interaction"><input type="checkbox" class="select-jobs">选择当前视图</label><span class="queue-total">4 项任务</span></div>
+        <div class="batch-bar" hidden data-feature="Q20 Q21"><span class="batch-count">已选 0 项</span><div class="action-pair"><button type="button" class="button cursor-interaction" data-batch="start">开始</button><button type="button" class="button cursor-interaction" data-batch="stop">停止</button><button type="button" class="text-button cursor-interaction" data-batch="remove">移除</button><details class="batch-more"><summary class="text-button cursor-interaction">更多</summary><div class="menu-body menu-action-list"><button type="button" class="menu-item cursor-interaction" data-batch="refresh">刷新信息</button><button type="button" class="menu-item cursor-interaction" data-batch="copy">复制链接</button><button type="button" class="menu-item cursor-interaction" data-batch="skip">跳过</button><button type="button" class="menu-item cursor-interaction" data-batch="unskip">恢复可下载</button><button type="button" class="menu-item cursor-interaction" data-batch="toggleSkip">反转可下载</button></div></details><button type="button" class="text-button clear-selection cursor-interaction">取消选择</button></div></div>
+        <div class="job-menu" hidden role="group" aria-label="当前任务更多操作"><div class="menu-heading"><strong class="menu-job-title">所选任务</strong><button type="button" class="text-button close-job-menu cursor-interaction">收起</button></div><div class="menu-grid" data-feature="Q03 Q04 Q05 Q06 Q07 Q08 Q09 Q10 Q11 Q12 Q13 Q14 Q15 Q22"><div class="menu-action-list"><span class="small-label">任务设置</span><button type="button" class="menu-item reselect-job cursor-interaction">重新选择集合内容</button><button type="button" class="menu-item cursor-interaction" data-panel="formats">格式与音轨</button><button type="button" class="menu-item cursor-interaction" data-panel="subtitles">字幕轨道</button><button type="button" class="menu-item cursor-interaction" data-panel="sections">下载时间段</button><button type="button" class="menu-item cursor-interaction" data-panel="filename">覆盖文件名</button><button type="button" class="menu-item cursor-interaction" data-task="split">集合拆成独立任务</button></div><div class="menu-action-list"><span class="small-label">信息与管理</span><button type="button" class="menu-item cursor-interaction" data-task="folder">在文件夹中显示</button><button type="button" class="menu-item cursor-interaction" data-task="file">打开文件</button><button type="button" class="menu-item cursor-interaction" data-task="copy">复制链接</button><button type="button" class="menu-item cursor-interaction" data-panel="json">查看元数据 JSON</button><button type="button" class="menu-item cursor-interaction" data-task="refresh">刷新信息</button><button type="button" class="menu-item cursor-interaction" data-task="skip">跳过下载</button><div class="action-pair"><button type="button" class="menu-item cursor-interaction" data-task="up">上移</button><button type="button" class="menu-item cursor-interaction" data-task="down">下移</button></div><div class="menu-management"></div></div></div></div>
+        <div class="finish-countdown" hidden role="status" aria-live="polite" data-feature="Q25"><strong class="countdown-title"></strong><button type="button" class="button cancel-finish cursor-interaction">取消</button></div>
+        <div class="queue-layout"><div class="jobs" aria-label="下载任务列表">
+            <article class="job is-selected" data-job="collection" data-status="running"><span class="cover art-grid job-cover" aria-hidden="true"><span>GRID<br>SYSTEMS</span><b>↗</b></span><div class="job-content"><button type="button" class="job-open cursor-interaction">Design Notes · 已选视频集合</button><span class="job-meta">3 个视频 · MP3 · 带封面</span><div class="job-state running"><i data-lucide="arrow-down" aria-hidden="true"></i><span>下载中 · 第 2 / 3 个</span><span class="job-speed">2.4 MB/s</span></div><div class="download-progress" role="progressbar" aria-label="当前视频下载进度" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"><span style="width:56%"></span></div></div><button type="button" class="button job-action cursor-interaction">停止</button></article>
+            <article class="job" data-job="processing" data-status="processing"><span class="cover art-color job-cover" aria-hidden="true"><span>COLOUR<br>IN USE</span><b>●</b></span><div class="job-content"><button type="button" class="job-open cursor-interaction">色彩与留白：日常设计练习</button><span class="job-meta">MP3 · 带封面</span><div class="job-state processing"><i data-lucide="repeat-2" aria-hidden="true"></i><span>转换音频、嵌入封面</span></div></div><button type="button" class="button job-action cursor-interaction">停止</button></article>
+            <article class="job" data-job="failed" data-status="failed"><span class="cover art-workflow job-cover" aria-hidden="true"><span>DESIGN<br>WORKFLOW</span><b>↳</b></span><div class="job-content"><button type="button" class="job-open cursor-interaction">原型设计中的交互反馈</button><span class="job-meta">MP4 · 1080p</span><div class="job-state failed"><i data-lucide="circle-alert" aria-hidden="true"></i><span>连接中断，请重新开始</span></div></div><button type="button" class="button job-action cursor-interaction">重试</button></article>
+            <article class="job" data-job="done" data-status="done"><span class="cover art-motion job-cover" aria-hidden="true"><span>LAYOUT<br>NOTES</span><b>▤</b></span><div class="job-content"><button type="button" class="job-open cursor-interaction">界面布局与信息层级</button><span class="job-meta">MP4 · 1080p</span><div class="job-state done"><i data-lucide="circle-check" aria-hidden="true"></i><span>已完成，文件已保存</span></div></div><button type="button" class="button job-action cursor-interaction" aria-label="打开界面布局与信息层级的文件夹"><i data-lucide="folder-open" aria-hidden="true"></i>文件夹</button></article>
+          </div><aside class="task-inspector" aria-label="所选任务详情"><span class="eyebrow">当前任务</span><h2 class="detail-title">Design Notes · 已选视频集合</h2><div class="detail-status">下载中</div><dl><dt>来源</dt><dd class="detail-source">YouTube 频道 · 选择 3 / 6</dd><dt>输出</dt><dd class="detail-output">MP3 音频 · 嵌入封面</dd><dt>命名</dt><dd class="detail-naming">上传者 - 标题</dd><dt>目录</dt><dd>系统下载文件夹</dd></dl><button type="button" class="button edit-job cursor-interaction" disabled>编辑此任务</button><div class="inspector-log"><span class="small-label">最新输出</span><pre class="log-content">[download] item 2 of 3</pre><button type="button" class="text-button cursor-interaction" data-panel="logs">查看完整日志</button></div></aside></div>
+      </section>
+      <section class="view" data-page="naming" hidden>
+          <header class="page-top"><div><span class="eyebrow">设置输出 / 命名</span><h1>文件命名</h1><p>按顺序组合字段，预览最终文件名。</p></div><button type="button" class="text-button cursor-interaction" data-go="output"><i data-lucide="arrow-left" aria-hidden="true"></i>返回输出设置</button></header>
+          <div class="scheme-layout"><aside class="scheme-list" aria-label="命名方案"><span class="small-label">常用组合</span><button type="button" class="scheme-button cursor-interaction" data-name-preset="title">标题<small>便于直接阅读</small></button><button type="button" class="scheme-button cursor-interaction" data-name-preset="author" aria-pressed="true">上传者 - 标题<small>按作者归档</small></button><button type="button" class="scheme-button cursor-interaction" data-name-preset="date">上传日期 - 上传者 - 标题<small>按时间归档</small></button><span class="small-label saved-heading">已保存方案</span><div class="saved-naming"></div></aside><div class="name-editor"><h2>添加命名字段</h2>
+            <div class="field-palette">
+              <section class="palette-group"><h3 class="palette-label">常用</h3><div class="field-options"><button type="button" class="button cursor-interaction" data-name-field="title">标题</button><button type="button" class="button cursor-interaction" data-name-field="author">上传者</button><button type="button" class="button cursor-interaction" data-name-field="date">上传日期</button></div></section>
+              <section class="palette-group"><h3 class="palette-label">媒体信息</h3><div class="field-options"><button type="button" class="button cursor-interaction" data-name-field="artist">歌手</button><button type="button" class="button cursor-interaction" data-name-field="track">曲名</button><button type="button" class="button cursor-interaction" data-name-field="album">专辑</button><button type="button" class="button cursor-interaction" data-name-field="trackNumber">曲目序号</button></div></section>
+              <section class="palette-group"><h3 class="palette-label">其他</h3><div class="field-options"><button type="button" class="button cursor-interaction" data-name-field="channel">频道</button><button type="button" class="button cursor-interaction" data-name-field="year">上传年份</button><button type="button" class="button cursor-interaction" data-name-field="id">视频 ID</button><button type="button" class="button cursor-interaction" data-name-field="playlist">播放列表名</button><button type="button" class="button cursor-interaction" data-name-field="index">列表序号</button></div></section>
+            </div>
+<div class="name-separator"><label>分隔符<select class="separator-select" aria-label="命名分隔符"><option value=" - ">横杠</option><option value="_">下划线</option><option value=" ">空格</option></select></label><div><button type="button" class="text-button remove-name-field cursor-interaction">移除末项</button><button type="button" class="text-button clear-name-fields cursor-interaction">重新选择</button></div></div><div class="name-order-area"><span class="small-label">从左到右的命名顺序</span><div class="name-tokens" aria-live="polite"></div></div><div class="name-preview-area"><span class="small-label">文件名预览</span><div class="name-preview-value">Design Notes - 网格与排版.mp3</div><small>预览采用示例值，实际文件使用视频自身的信息。</small></div><p class="scheme-hint">命名方案只改变文件名；下载内容、格式和封面设置保持当前选择。</p></div></div>
+          <details class="advanced-block naming-advanced" data-feature="O14 O15 O16 N05"><summary class="cursor-interaction">高级模板与播放列表规则</summary><div class="advanced-body"><label class="field"><span>原始 yt-dlp 输出模板</span><textarea class="raw-template" rows="2" aria-label="原始输出模板">%(uploader)s - %(title)s.%(ext)s</textarea></label><button type="button" class="text-button reset-template cursor-interaction">恢复默认输出模板</button><label class="field"><span>播放列表序号前缀（空为不添加）</span><input type="text" class="playlist-prefix" aria-label="播放列表序号前缀" value="%(playlist_index)d - "></label><button type="button" class="text-button reset-prefix cursor-interaction">恢复默认前缀</button><div class="compact-checks"><label class="check-row cursor-interaction"><input type="checkbox" data-extra="zeroPadding" checked>列表序号按集合大小补零</label><label class="check-row cursor-interaction"><input type="checkbox" data-extra="playlistFolder" checked>集合保存到独立子目录</label></div><p class="small-note">列表、频道和专辑沿用原有子目录规则；字段含列表序号时避免重复前缀。</p></div></details>
+          <label class="field bandcamp-naming" data-feature="O14"><span>Bandcamp 专辑的独立输出模板</span><input type="text" class="bandcamp-template" aria-label="Bandcamp专辑输出模板" value="%(title)s.%(ext)s"><small>普通媒体与 Bandcamp 专辑分别保存模板。</small></label>
+          <footer class="view-actions" data-feature="N04"><span>仅修改命名规则</span><div class="action-pair"><button type="button" class="text-button cancel-naming cursor-interaction">取消</button><button type="button" class="text-button save-naming cursor-interaction">保存当前方案</button><button type="button" class="button primary use-naming cursor-interaction">应用命名</button></div></footer>
+        </section>
+      <section class="view" data-page="settings" hidden>
+        <header class="page-top settings-heading"><h1></h1><span class="settings-save-state">设置自动保存</span></header>
+        <div class="settings-layout">
+          <div class="settings-groups">
+            <section class="settings-category" data-category="appearance" data-feature="C17 C18 C19 C20 C21 C22">
+              <section class="form-section"><h2>语言与外观</h2><div class="two-fields"><label class="field"><span>界面语言</span><select aria-label="界面语言"><option>简体中文</option><option>English</option></select><small>重新启动后生效</small></label><label class="field"><span>界面主题</span><select aria-label="界面主题"><option>跟随系统</option><option>浅色</option><option>深色</option></select></label></div></section>
+              <section class="form-section"><h2>目录选择</h2><label class="field"><span>选择文件夹时打开</span><select data-pref="folderOrigin" aria-label="目录选择起始位置"><option value="current">当前下载目录</option><option value="program">程序目录</option></select></label></section>
+              <details class="advanced-block"><summary class="cursor-interaction">窗口与显示</summary><div class="advanced-body"><label class="field"><span>对比度 <output class="contrast-value">10%</output></span><input type="range" min="0" max="30" value="10" class="contrast-slider" aria-label="界面对比度"></label><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-pref="snap" checked>窗口吸附屏幕边缘</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="noMinWidth">解除窗口最小宽度限制</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="exactBytes">格式大小显示精确字节</label></div></div></details>
+            </section>
+            <section class="settings-category" data-category="queue" hidden data-feature="C09 C10 C11 C12 C13 C14 C15 C16 O18 Q26">
+              <section class="form-section"><div class="section-heading"><h2>默认输出</h2><button type="button" class="text-button edit-defaults cursor-interaction">编辑默认值</button></div><p class="default-output-summary">MP3 · 嵌入封面 · 上传者 - 标题</p><p class="small-note default-output-scope">用于新任务，已有任务保留各自设置。</p></section>
+              <section class="form-section"><h2>并行任务</h2><div class="two-fields"><label class="field"><span>自动并行下载</span><input type="number" min="1" max="10" value="1" data-pref="maxDownloads" aria-label="最大并行下载数"><small>1–10；手动启动不受此限制</small></label><label class="field"><span>并行获取信息</span><input type="number" min="1" max="8" value="4" data-pref="maxInfo" aria-label="元数据并发数"><small>上限随设备 CPU 数量</small></label></div></section>
+              <details class="advanced-block"><summary class="cursor-interaction">调度与恢复</summary><div class="advanced-body"><p class="small-note">退出时保存未完成队列，下次启动恢复。</p><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-pref="lengthy" checked>合并或转换时开始下一项</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="nextOnStop" checked>停止任务后自动开始下一项</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="autoStart">启动时自动处理未完成队列</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="saveErrors" checked>恢复时保留失败任务</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="removeDone">自动移除已完成任务</label></div></div></details>
+              <details class="advanced-block"><summary class="cursor-interaction">添加与选项管理</summary><div class="advanced-body"><div class="check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-pref="clipboardFocus">窗口激活时添加剪贴板链接</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="customTitle">任务列表使用自定义文件名</label></div><label class="field"><span>处理选项的作用范围</span><select class="queue-option-scope" aria-label="队列下载选项方式"><option value="individual">每个任务独立</option><option value="shared">全部任务共享</option></select><small>共享封面、MP3 转换、字幕嵌入、限速、章节与自定义参数；保存时同步，运行中任务下次启动使用。</small></label></div></details>
+            </section>
+            <section class="settings-category" data-category="network" hidden data-feature="C01 C02 C03 C04 C05">
+              <section class="form-section"><div class="section-heading"><h2>代理</h2><label class="check-row cursor-interaction"><input type="checkbox" class="proxy-enabled">启用</label></div><label class="field"><span>代理地址</span><input type="text" class="proxy-input" aria-label="代理地址" placeholder="http://127.0.0.1:7890" disabled></label></section>
+              <section class="form-section"><h2>Cookie</h2><label class="field"><span>来源</span><select class="cookie-mode" aria-label="Cookie来源"><option value="none">不使用 Cookie</option><option value="browser">从浏览器读取</option><option value="file">使用 Cookie 文件</option></select></label><div class="cookie-browser" hidden><label class="field"><span>浏览器</span><select class="cookie-browser-select" aria-label="Cookie浏览器"></select></label><details class="advanced-block"><summary class="cursor-interaction">浏览器附加选项</summary><div class="advanced-body"><input type="text" aria-label="Cookie浏览器附加选项" placeholder="配置文件 / 密钥环"></div></details></div><div class="cookie-file" hidden><label class="field"><span>Cookie 文件</span><div class="input-actions"><input type="text" aria-label="Cookie文件路径" placeholder="Netscape Cookie 文件"><button type="button" class="button native-pick cursor-interaction" data-picker="Cookie文件">选择</button></div></label></div></section>
+              <details class="advanced-block"><summary class="cursor-interaction">外部下载器 · aria2c</summary><div class="advanced-body"><p class="small-note aria-status">aria2c.exe 已找到（演示）</p><label class="check-row cursor-interaction"><input type="checkbox" class="aria-enabled">使用 aria2c 下载</label><label class="field"><span>附加参数</span><input type="text" class="aria-args" aria-label="aria2c附加参数" disabled></label></div></details>
+            </section>
+            <section class="settings-category" data-category="sponsor" hidden data-feature="C06 C07 C08"><section class="form-section"><h2>SponsorBlock</h2><p class="small-note">标记保留原内容；移除会改变下载结果。</p><label class="check-row cursor-interaction"><input type="checkbox" class="sponsor-mark-enabled">在章节中标记片段</label><details class="advanced-block"><summary class="cursor-interaction">标记类别</summary><div class="advanced-body sponsor-mark compact-checks"></div></details><label class="check-row cursor-interaction"><input type="checkbox" class="sponsor-remove-enabled">移除片段</label><details class="advanced-block"><summary class="cursor-interaction">移除类别</summary><div class="advanced-body sponsor-remove compact-checks"></div></details></section><section class="form-section"><div class="section-heading"><h2>媒体处理组件</h2><button type="button" class="text-button settings-jump cursor-interaction" data-settings-jump="updates">管理 FFmpeg</button></div><p class="small-note">格式转换、合并与章节处理使用 FFmpeg。</p></section></section>
+            <section class="settings-category" data-category="updates" hidden data-feature="U01 U02 U03 U04 U05 U06 U07 U08 U09 U10">
+              <section class="form-section"><h2>已安装组件</h2><p class="small-note" data-component-text="scope_note"></p><div class="component-list"></div></section>
+              <details class="advanced-block component-path-settings"><summary class="cursor-interaction">组件路径与更新频道</summary><div class="advanced-body">
+                <label class="field"><span data-component-text="ytdlp_path"></span><div class="input-actions"><input type="text" class="ytdlp-path"><button type="button" class="button component-pick cursor-interaction" data-component-path="yt-dlp" data-component-text="choose"></button></div></label>
+                <div class="action-pair"><button type="button" class="button component-save-path cursor-interaction" data-component-path="yt-dlp" data-component-text="save_path"></button><button type="button" class="text-button component-reset-path cursor-interaction" data-component-path="yt-dlp" data-component-text="reset_path"></button></div>
+                <label class="field"><span data-component-text="ffmpeg_path"></span><div class="input-actions"><input type="text" class="ffmpeg-path"><button type="button" class="button component-pick cursor-interaction" data-component-path="ffmpeg" data-component-text="choose"></button></div></label>
+                <div class="action-pair"><button type="button" class="button component-save-path cursor-interaction" data-component-path="ffmpeg" data-component-text="save_path"></button><button type="button" class="text-button component-reset-path cursor-interaction" data-component-path="ffmpeg" data-component-text="reset_path"></button></div>
+                <p class="component-path-state small-note" role="status"></p>
+                <label class="field"><span data-component-text="channel"></span><select class="update-channel"><option value="stable">Stable</option><option value="nightly">Nightly</option></select></label>
+                <p class="small-note" data-component-text="path_timing"></p>
+              </div></details>
+              <details class="advanced-block component-update-preferences"><summary class="cursor-interaction" data-update-text="preferences"></summary><div class="advanced-body check-stack"><label class="check-row cursor-interaction"><input type="checkbox" data-pref="checkStartup"><span data-update-text="checkStartup"></span></label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="ffplay"><span data-update-text="ffplay"></span></label><p class="small-note" data-update-text="guiUnavailable"></p></div></details>
+            </section>
+            <section class="settings-category" data-category="presets" hidden><section class="form-section config-editor" data-feature="C23 C24"><h2>配置预设</h2><p class="small-note">保存下载偏好、网络、内容处理和队列规则。</p><div class="two-fields"><label class="field"><span>已保存配置</span><select class="config-presets" aria-label="配置预设"><option value="">尚无配置预设</option></select></label><label class="field"><span>配置名称</span><input type="text" class="config-name" aria-label="配置预设名称" placeholder="输入名称"></label></div><div class="action-pair"><button type="button" class="button primary cursor-interaction" data-config="create">创建预设</button><button type="button" class="button cursor-interaction" data-config="load">应用预设</button><details class="config-more"><summary class="text-button cursor-interaction">管理</summary><div class="menu-body menu-action-list"><button type="button" class="menu-item cursor-interaction" data-config="save">保存到所选配置</button><button type="button" class="menu-item cursor-interaction" data-config="rename">重命名</button><button type="button" class="menu-item cursor-interaction" data-config="delete">删除配置</button></div></details></div><p class="config-status small-note" aria-live="polite">创建后可从列表切换配置。</p><div class="blank-config-confirm" hidden role="alert"><span>保存为空名称？</span><div class="action-pair"><button type="button" class="button confirm-blank-config cursor-interaction">保留空名称</button><button type="button" class="text-button cancel-blank-config cursor-interaction">返回填写</button></div></div>
+      </section><details class="advanced-block theme-settings" data-feature="T01 T02 T03 T04" hidden><summary class="cursor-interaction">自定义配色</summary><div class="advanced-body"><div class="compact-checks"><label class="check-row cursor-interaction"><input type="checkbox" data-pref="customLight">启用自定义浅色主题</label><label class="check-row cursor-interaction"><input type="checkbox" data-pref="customDark">启用自定义深色主题</label></div><label class="field"><span>编辑主题</span><select class="theme-target" aria-label="编辑主题"><option value="light">浅色主题</option><option value="dark">深色主题</option></select></label><div class="two-fields" data-feature="T02"><label class="field"><span>颜色目标</span><select class="color-target" aria-label="颜色目标"></select></label><label class="field"><span>颜色 HEX</span><div class="input-actions"><input type="color" class="color-picker" aria-label="选择颜色"><input type="text" class="color-hex" aria-label="颜色HEX" maxlength="7"></div></label></div><div class="theme-preview">示例标题<span>文本、链接、列表选择与错误提示</span></div><div class="action-pair" data-feature="T03 T04"><button type="button" class="button color-reset cursor-interaction">恢复当前颜色</button><button type="button" class="button theme-reset cursor-interaction">恢复全部默认</button><button type="button" class="button theme-apply cursor-interaction">应用配色</button><button type="button" class="button theme-save cursor-interaction">保存主题文件</button><label class="file-button button cursor-interaction">加载主题文件<input type="file" class="theme-load" accept=".ltheme,.dtheme,application/json" aria-label="加载主题文件"></label></div><label class="field"><span>主题文件内容</span><textarea class="theme-file" rows="3" readonly aria-label="主题文件内容"></textarea></label></div></details></section>
+            <section class="settings-category" data-category="about" data-feature="A01 A02" hidden>
+              <section class="form-section"><h2 data-about-text="title"></h2><dl class="shortcut-list about-facts"></dl><p class="small-note" data-about-text="origin"></p><button type="button" class="text-button" data-about-link="upstream" data-about-text="upstream"></button><p class="small-note" data-about-text="modifiedRepositoryUnknown"></p><p class="small-note" data-update-text="guiUnavailable"></p></section>
+              <details class="advanced-block" open><summary class="cursor-interaction" data-about-text="dependencies"></summary><div class="advanced-body about-dependencies"></div></details>
+              <details class="advanced-block"><summary class="cursor-interaction" data-about-text="components"></summary><div class="advanced-body about-components"></div></details>
+              <details class="advanced-block" open><summary class="cursor-interaction" data-about-text="shortcuts"></summary><div class="advanced-body"><p class="small-note" data-about-text="focus"></p><dl class="shortcut-list about-shortcuts"></dl></div></details>
+              <details class="advanced-block"><summary class="cursor-interaction" data-about-text="licenses"></summary><div class="advanced-body"><p class="small-note" data-about-text="copyright"></p><pre class="about-license"></pre><h3>Lucide / Feather</h3><pre class="about-lucide-license"></pre><button type="button" class="button" data-about-link="bundledLicenses" data-about-text="bundledLicenses"></button><p class="small-note about-license-state"></p></div></details>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section class="view" data-page="detail" hidden>
+          <header class="page-top"><div><span class="eyebrow">任务 / 高级设置</span><h1 class="panel-title">任务设置</h1><p class="panel-context">当前任务</p></div><button type="button" class="text-button close-panel cursor-interaction"><i data-lucide="arrow-left" aria-hidden="true"></i>返回</button></header>
+          <section class="detail-panel" data-detail="formats" data-feature="D01 D02 D03 D04"><div class="media-facts"><span class="cover art-grid format-cover" role="img" aria-label="所选视频封面示例"><span>GRID<br>SYSTEMS</span></span><span>时长 12:48 · 1 个章节 · Design Notes · 2026-10-01</span></div><label class="check-row cursor-interaction"><input type="checkbox" class="multi-audio">选择多条音轨并合并为 MKV</label><p class="small-note">混合流与独立流互斥；最多一条视频流。展开每个格式可查看全部技术字段。</p><div class="format-streams"></div><footer class="view-actions"><button type="button" class="button automatic-format cursor-interaction">恢复自动选择最优格式</button><button type="button" class="button primary apply-formats cursor-interaction" disabled>使用所选格式</button></footer></section>
+          <section class="detail-panel" data-detail="subtitles" hidden data-feature="D05 D06"><p class="subtitle-empty small-note" hidden>没有人工字幕；可在输出设置中选择自动字幕。</p><div class="subtitle-tracks compact-checks"></div><label class="field"><span>字幕文件格式</span><select class="subtitle-format" aria-label="字幕文件格式"><option value="any">Any（自动）</option><option>vtt</option><option>srt</option><option>ttml</option></select></label><label class="check-row cursor-interaction"><input type="checkbox" class="subtitle-default">作为以后任务的默认字幕设置</label><button type="button" class="text-button clear-subtitle-default cursor-interaction">清除已保存默认</button><p class="subtitle-default-state small-note">尚未保存默认字幕。</p><footer class="view-actions"><button type="button" class="button close-panel cursor-interaction">取消</button><button type="button" class="button primary apply-subtitles cursor-interaction">应用字幕选择</button></footer></section>
+          <section class="detail-panel" data-detail="sections" hidden data-feature="D07 D08"><div class="two-fields"><label class="field"><span>开始时间</span><input type="text" class="section-start" aria-label="时间段开始" placeholder="0 / 01:30 / 00:01:30"></label><label class="field"><span>结束时间</span><input type="text" class="section-end" aria-label="时间段结束" placeholder="空或 0 表示直到结尾"></label></div><button type="button" class="button add-section cursor-interaction">添加时间段</button><div class="section-error" role="alert"></div><div class="section-list"></div><div class="action-pair"><button type="button" class="button clear-sections cursor-interaction">清空时间段</button><button type="button" class="button primary apply-sections cursor-interaction">保存并返回</button></div></section>
+          <section class="detail-panel" data-detail="filename" hidden data-feature="Q06 Q07"><label class="field"><span>输出文件路径与名称</span><div class="input-actions"><input type="text" class="custom-filename" aria-label="自定义输出文件" placeholder="选择保存路径及文件名"><button type="button" class="button native-pick cursor-interaction" data-picker="当前任务输出文件">选择输出文件</button></div></label><p class="small-note">此设置优先于命名模板；选择其他目录也会更新当前下载目录。</p><footer class="view-actions"><button type="button" class="button clear-filename cursor-interaction">清除覆盖，恢复模板</button><button type="button" class="button primary apply-filename cursor-interaction">应用到当前任务</button></footer></section>
+          <section class="detail-panel" data-detail="json" hidden data-feature="D09 D10"><div class="selection-tools"><label class="check-row cursor-interaction"><input type="checkbox" class="hide-null">隐藏 null 值</label><button type="button" class="button copy-json-value cursor-interaction" disabled>复制所选值</button></div><div class="metadata-tree"></div><label class="field"><span>获取元数据使用的命令</span><textarea class="metadata-command" rows="2" readonly aria-label="元数据获取命令"></textarea></label><details class="advanced-block"><summary class="cursor-interaction">导出元数据</summary><div class="advanced-body menu-action-list"><button type="button" class="menu-item cursor-interaction" data-export="txt">保存 TXT</button><button type="button" class="menu-item cursor-interaction" data-export="json">保存 JSON</button><button type="button" class="menu-item cursor-interaction" data-export="pretty">保存格式化 JSON</button></div></details><textarea class="metadata-export" rows="5" aria-label="元数据导出内容" readonly hidden></textarea></section>
+          <section class="detail-panel" data-detail="logs" hidden data-feature="Q02 D11 D12"><div class="selection-tools"><div class="action-pair"><button type="button" class="button copy-log-selection cursor-interaction">复制选中文字</button><button type="button" class="button copy-command cursor-interaction">复制下载命令</button></div><span class="small-note">按任务分别保留</span></div><details class="advanced-block"><summary class="cursor-interaction">日志显示</summary><div class="advanced-body"><div class="compact-checks"><label class="check-row cursor-interaction"><input type="checkbox" class="log-highlight" checked>关键词高亮</label><label class="check-row cursor-interaction"><input type="checkbox" class="log-buffer" checked>限制日志缓冲区</label></div></div></details><p class="small-note log-limit-state" role="status"></p><pre class="full-log"></pre><label class="field"><span>当前任务下载命令</span><textarea class="download-command" rows="3" readonly aria-label="当前下载命令"></textarea></label><p class="small-note">自动定位到最新输出；选择文本时保留当前阅读位置。</p></section>
+          <section class="detail-panel" data-detail="changes" hidden data-feature="U09"><h2 class="changes-component" data-update-text="releaseNotes"></h2><div class="two-fields"><label class="field"><span data-update-text="component"></span><select class="release-component"></select></label><label class="field"><span data-update-text="version"></span><select class="release-version"></select></label></div><label class="check-row cursor-interaction"><input type="checkbox" class="changelog-view"><span data-update-text="continuous"></span></label><div class="action-pair"><button type="button" class="button release-prev" data-update-text="previousPage"></button><button type="button" class="button release-next" data-update-text="nextPage"></button><button type="button" class="text-button release-open" data-update-text="openRelease"></button></div><p class="release-status small-note" role="status"></p><pre class="changes-content"></pre></section>
+        </section>
+    </div>
+  </div>
+  <footer class="desktop-footer"><span class="feedback" role="status" aria-live="polite">准备就绪</span><span>交互演示</span></footer>
+</template>
+<article class="product" data-layout="native"></article></div><script src="lucide.min.js"></script><script src="bridge.js"></script><script src="app.js"></script></body></html>

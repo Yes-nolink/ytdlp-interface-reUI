@@ -1,0 +1,10 @@
+#pragma once
+// 来自实际配置文件与当前构建工作区；不作为发布或更新渠道。
+namespace build_info
+{
+	inline constexpr auto revision = "@ABOUT_REVISION@";
+	inline constexpr auto lucide = "@ABOUT_LUCIDE@";
+	inline constexpr auto webview_sdk = "@ABOUT_WEBVIEW_SDK@";
+	inline constexpr auto project_license = R"about(@ABOUT_PROJECT_LICENSE@)about";
+	inline constexpr auto lucide_license = R"about(@ABOUT_LUCIDE_LICENSE@)about";
+}

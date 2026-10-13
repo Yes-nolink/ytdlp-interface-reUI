@@ -1,0 +1,290 @@
+#ytdlp-workflow-redesign .product {
+  --paper: light-dark(#f5f7fb,#181d28); --surface: light-dark(#ffffff,#242b39); --rail: light-dark(#fbfcff,#1e2431);
+  --ink: light-dark(#172236,#e9edf6); --muted-ink: light-dark(#6e7b91,#adb9ce); --line: light-dark(#e6eaf1,#384255);
+  --soft: light-dark(#eef2f8,#2b3547); --brand: light-dark(#3b65e8,#98b3ff); --on-brand: light-dark(#ffffff,#182342);
+  --active: light-dark(#eaf0ff,#2e3c5e); --success: light-dark(#188465,#90d6bc); --error: light-dark(#bd4952,#ffa9b1);
+  --scroll-thumb: light-dark(#afbed2,#536782); --scroll-thumb-hover: light-dark(#8fa5c2,#758cac); --scroll-thumb-active: light-dark(#6684af,#93aacb);
+  --nav-width: 214px;
+  --text-title: 28px; --control-radius: 10px; --row-space: 10px;
+}
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar { width: 8px; height: 8px; }
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar-track, #ytdlp-workflow-redesign .product *::-webkit-scrollbar-corner { background: transparent; }
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border: 1px solid transparent; background-clip: padding-box; border-radius: 8px; min-height: 32px; min-width: 32px; }
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar-thumb:hover { background-color: var(--scroll-thumb-hover); }
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar-thumb:active { background-color: var(--scroll-thumb-active); }
+#ytdlp-workflow-redesign .product *::-webkit-scrollbar-button { display: none; }
+#ytdlp-workflow-redesign .product .app-body { grid-template-columns: var(--nav-width) minmax(0,1fr); }
+#ytdlp-workflow-redesign .product .app-nav { grid-column: 1; grid-row: 1; padding: 16px 12px 8px; gap: 0; overflow: hidden; }
+#ytdlp-workflow-redesign .product .nav-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+#ytdlp-workflow-redesign .product .desktop-bar { display: grid; grid-template-columns: var(--nav-width) minmax(0,1fr) auto auto; height: 64px; flex-basis: 64px; padding: 0 24px 0 0; gap: 16px; background: var(--surface); border-radius: 0; }
+#ytdlp-workflow-redesign .product .desktop-bar > div { min-width: 0; }
+#ytdlp-workflow-redesign .product .desktop-bar strong { display: block; font-size: 16px; font-weight: 600; }
+#ytdlp-workflow-redesign .product .workbench-breadcrumb { display: block; color: var(--muted-ink); font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .desktop-bar > .button { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .workbench-brand { display: flex; align-items: center; gap: 10px; padding: 0 20px; height: 100%; background: var(--rail); border-right: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .workbench-brand-mark { width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; display: grid; place-items: center; color: var(--on-brand); background: var(--brand); }
+#ytdlp-workflow-redesign .product .workbench-brand strong { font-size: 14px; font-weight: 600; white-space: nowrap; }
+#ytdlp-workflow-redesign .product .workbench-brand small { display: block; color: var(--muted-ink); font-size: 11px; }
+#ytdlp-workflow-redesign .product .nav-button { padding: 10px 12px; min-height: 40px; line-height: 20px; font-weight: 500; }
+#ytdlp-workflow-redesign .product .nav-label { flex: 1; min-width: 0; white-space: normal; }
+#ytdlp-workflow-redesign .product .queue-count { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .nav-button > svg { width: 19px; height: 19px; }
+#ytdlp-workflow-redesign .product .nav-group-label { padding: 0 12px 8px; }
+#ytdlp-workflow-redesign .product .nav-settings-heading { display: flex; align-items: center; gap: 9px; margin-top: 20px; }
+#ytdlp-workflow-redesign .product .nav-settings-heading svg { width: 16px; height: 16px; }
+#ytdlp-workflow-redesign .product .nav-engine { flex-shrink: 0; padding: 10px 8px 2px; margin-top: 8px; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .main-area { display: flex; padding: 24px; overflow: hidden; }
+#ytdlp-workflow-redesign .product[data-workspace="home"] .main-area { display: flex; overflow: hidden; padding: 20px 24px; }
+#ytdlp-workflow-redesign .product .workbench-home { display: grid; grid-template-rows: auto auto auto auto auto minmax(0,1fr); flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .workbench-home > .page-top { margin-bottom: 14px; }
+#ytdlp-workflow-redesign .product .main-area > .view { min-width: 0; min-height: 0; }
+#ytdlp-workflow-redesign .product .page-top { margin-bottom: 24px; }
+#ytdlp-workflow-redesign .product .page-top p { white-space: normal; }
+#ytdlp-workflow-redesign .product [data-page="queue"] > .page-top { margin-bottom: 16px; }
+#ytdlp-workflow-redesign .product [data-page="queue"] > .page-top h1 { font-size: 20px; }
+#ytdlp-workflow-redesign .product .eyebrow { color: var(--brand); letter-spacing: 1.2px; font-size: 11px; font-weight: 600; }
+#ytdlp-workflow-redesign .product .button { min-height: 38px; padding: 8px 14px; }
+#ytdlp-workflow-redesign .product :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+#ytdlp-workflow-redesign .product .advanced-options { opacity: 1; }
+#ytdlp-workflow-redesign .product .workbench-card { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; }
+#ytdlp-workflow-redesign .product .workbench-input { padding: 16px 20px; }
+#ytdlp-workflow-redesign .product .workbench-input h2, #ytdlp-workflow-redesign .product .workbench-section-heading h2 { font-size: 17px; font-weight: 600; }
+#ytdlp-workflow-redesign .product .workbench-source-form { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; margin: 10px 0 6px; }
+#ytdlp-workflow-redesign .product .workbench-source-form textarea { padding: 8px 0; height: 40px; resize: none; font-size: 14px; }
+#ytdlp-workflow-redesign .product .workbench-link-box { display: flex; align-items: center; gap: 10px; padding: 0 12px; min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+#ytdlp-workflow-redesign .product .workbench-link-box textarea { background: transparent; border: 0; }
+#ytdlp-workflow-redesign .product .workbench-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0 8px; }
+#ytdlp-workflow-redesign .product .workbench-metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+#ytdlp-workflow-redesign .product .workbench-metrics > div { padding: 10px 14px; }
+#ytdlp-workflow-redesign .product .workbench-metrics span, #ytdlp-workflow-redesign .product .workbench-metrics small { display: block; color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .workbench-metrics strong { display: block; font-size: 24px; font-weight: 600; margin: 2px 0; font-variant-numeric: tabular-nums; }
+#ytdlp-workflow-redesign .product .workbench-metrics span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .workbench-lower { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; min-height: 0; }
+#ytdlp-workflow-redesign .product .workbench-activity { padding: 8px 14px; min-height: 0; }
+#ytdlp-workflow-redesign .product .workbench-activity .queue-empty { padding: 8px 0; font-size: 12px; }
+#ytdlp-workflow-redesign .product .workbench-activity-row { display: flex; align-items: center; gap: 10px; height: 56px; border-bottom: 1px solid var(--line); padding: 7px 0; }
+#ytdlp-workflow-redesign .product .workbench-activity-row:last-child { border: 0; }
+#ytdlp-workflow-redesign .product .workbench-activity-row > div { flex: 1; min-width: 0; }
+#ytdlp-workflow-redesign .product .workbench-activity-row .job-open { font-size: 14px; }
+#ytdlp-workflow-redesign .product .workbench-type { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--active); color: var(--brand); flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .workbench-badge { background: var(--active); color: var(--brand); border-radius: 7px; padding: 5px 9px; font-size: 12px; white-space: nowrap; }
+#ytdlp-workflow-redesign .product .workbench-badge[data-status="failed"], #ytdlp-workflow-redesign .product .workbench-badge[data-status="partial"] { background: color-mix(in srgb,var(--error) 10%,var(--surface)); color: var(--error); }
+#ytdlp-workflow-redesign .product .workbench-defaults { padding: 14px; min-height: 0; }
+#ytdlp-workflow-redesign .product .workbench-defaults dl { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px 12px; padding: 10px 0 0; margin: 0; }
+#ytdlp-workflow-redesign .product .workbench-defaults dt { color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .workbench-defaults dd { margin: 0; min-width: 0; text-align: right; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ytdlp-workflow-redesign .product .workbench-defaults .button { min-height: 31px; padding: 5px 10px; font-size: 12px; flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .workbench-defaults .section-heading h2 { white-space: nowrap; }
+#ytdlp-workflow-redesign .product .workbench-metrics small, #ytdlp-workflow-redesign .product .workbench-defaults > .small-note { display: none; }
+#ytdlp-workflow-redesign .product .queue-tools, #ytdlp-workflow-redesign .product .queue-tool-right { flex-wrap: wrap; }
+#ytdlp-workflow-redesign .product .queue-tabs { background: var(--soft); padding: 4px; border-radius: 10px; }
+#ytdlp-workflow-redesign .product .queue-filter[aria-pressed="true"] { background: var(--surface); box-shadow: 0 2px 5px color-mix(in srgb,var(--ink) 8%,transparent); }
+#ytdlp-workflow-redesign .product .queue-search { max-width: 260px; }
+#ytdlp-workflow-redesign .product .queue-scope-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 14px; margin: 14px 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+#ytdlp-workflow-redesign .product .queue-scope-field { width: 142px; flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .queue-scope-field > span { display: none; }
+#ytdlp-workflow-redesign .product .queue-scope-field select { margin: 0; min-height: 35px; }
+#ytdlp-workflow-redesign .product .queue-scope-tools .queue-group-context { flex: 1; min-width: 110px; gap: 3px; padding: 0; margin: 0; border: 0; }
+#ytdlp-workflow-redesign .product .queue-scope-tools > .button { min-height: 35px; font-size: 12px; padding: 7px 10px; }
+#ytdlp-workflow-redesign .product .scope-compact-label { display: none; }
+#ytdlp-workflow-redesign .product .batch-bar { padding: 12px 14px; background: var(--active); border: 1px solid color-mix(in srgb,var(--brand) 20%,var(--line)); border-radius: 10px; }
+#ytdlp-workflow-redesign .product .selection-feedback { width: 100%; margin: 0; }
+#ytdlp-workflow-redesign .product .selection-feedback:empty { display: none; }
+#ytdlp-workflow-redesign .product .command-menu[popover] { width: min(320px,calc(100vw - 16px)); padding: 6px; gap: 0; overflow: visible; }
+#ytdlp-workflow-redesign .product .command-menu .menu-action-list { gap: 0; }
+#ytdlp-workflow-redesign .product .command-menu .menu-item { min-height: 34px; width: 100%; padding: 7px 10px; line-height: 20px; white-space: normal; }
+#ytdlp-workflow-redesign .product .command-menu .danger-command { margin-top: 5px; border-top: 1px solid var(--line); border-radius: 0 0 6px 6px; color: var(--error); }
+#ytdlp-workflow-redesign .product .command-dialog { width: min(480px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); overflow: auto; }
+#ytdlp-workflow-redesign .product .command-dialog[open] { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+#ytdlp-workflow-redesign .product .command-dialog > :not(.command-dialog-body) { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .command-dialog-body { display: grid; gap: 12px; flex: 0 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+#ytdlp-workflow-redesign .product .command-dialog::backdrop { background: light-dark(#192c5145,#00000080); }
+#ytdlp-workflow-redesign .product .command-dialog > strong, #ytdlp-workflow-redesign .product .command-dialog > h2 { font-size: 18px; margin: 0; }
+#ytdlp-workflow-redesign .product .command-dialog > .small-note { margin: 0; }
+#ytdlp-workflow-redesign .product .queue-group-menu .menu-action-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+#ytdlp-workflow-redesign .product .queue-group-menu [data-group-action="remove"], #ytdlp-workflow-redesign .product .queue-group-menu [data-group-action="delete"] { color: var(--error); }
+#ytdlp-workflow-redesign .product .queue-availability-dialog .menu-item { min-height: 38px; }
+#ytdlp-workflow-redesign .product .queue-command-preferences .queue-display { margin-top: 20px; }
+#ytdlp-workflow-redesign .product .queue-command-preferences .compact-checks { grid-template-columns: repeat(2,minmax(0,1fr)); }
+#ytdlp-workflow-redesign .product .jobs { overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 15px; }
+#ytdlp-workflow-redesign .product .queue-group-heading { padding: 12px 16px; background: var(--rail); }
+#ytdlp-workflow-redesign .product .queue-group-status { text-align: right; }
+#ytdlp-workflow-redesign .product .job, #ytdlp-workflow-redesign .product[data-layout="native"] .job { grid-template-columns: 18px 58px minmax(0,1fr) auto; padding: 16px; }
+#ytdlp-workflow-redesign .product .job-open { font-size: 14px; }
+#ytdlp-workflow-redesign .product .job-cover { border-radius: 8px; aspect-ratio: 16/10; align-self: center; }
+#ytdlp-workflow-redesign .product .job-state { margin-top: 6px; font-size: 12px; }
+#ytdlp-workflow-redesign .product .job-content { display: grid; grid-template-columns: minmax(0,1fr) 150px; grid-template-areas: "title status" "meta progress" "extra extra"; gap: 3px 14px; }
+#ytdlp-workflow-redesign .product .job-title-line { grid-area: title; }
+#ytdlp-workflow-redesign .product .job-meta { grid-area: meta; margin: 0; }
+#ytdlp-workflow-redesign .product .job-state { grid-area: status; margin: 0; font-weight: 500; }
+#ytdlp-workflow-redesign .product .download-progress { grid-area: progress; margin: 0; align-self: center; }
+#ytdlp-workflow-redesign .product .job-extra { grid-area: extra; margin: 0; min-width: 0; }
+#ytdlp-workflow-redesign .product .job-extra { font-size: 12px; }
+#ytdlp-workflow-redesign .product .job-action { min-height: 31px; font-size: 12px; padding: 5px 10px; }
+#ytdlp-workflow-redesign .product .job-title-line { display: flex; align-items: center; gap: 6px; min-width: 0; }
+#ytdlp-workflow-redesign .product .collection-toggle { border: 0; background: transparent; padding: 3px; display: flex; color: var(--muted-ink); flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .collection-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+#ytdlp-workflow-redesign .product .job-child { padding-left: 48px !important; background: var(--rail); }
+#ytdlp-workflow-redesign .product .settings-heading { min-height: 48px; align-items: center; margin-bottom: 16px; }
+#ytdlp-workflow-redesign .product .settings-heading h1 { font-size: 20px; margin: 0; }
+#ytdlp-workflow-redesign .product .settings-save-state { padding: 0; max-width: 55%; overflow-wrap: anywhere; text-align: right; }
+#ytdlp-workflow-redesign .product .settings-layout { display: block; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; container-type: inline-size; container-name: settings-body; }
+#ytdlp-workflow-redesign .product .settings-nav { align-self: stretch; gap: 0; margin-left: 20px; border: 0; border-left: 1px solid var(--line); padding: 0 0 0 8px; }
+#ytdlp-workflow-redesign .product .settings-link { padding: 7px 10px; min-height: 34px; font-size: 13px; line-height: 20px; }
+#ytdlp-workflow-redesign .product .settings-groups { width: 100%; max-width: 1040px; background: var(--surface); padding: 24px; border: 1px solid var(--line); border-radius: 15px; overflow: visible; }
+@container settings-body (max-width:540px) {
+  #ytdlp-workflow-redesign .product .settings-groups .two-fields, #ytdlp-workflow-redesign .product .settings-groups .compact-checks { grid-template-columns: minmax(0,1fr); }
+}
+#ytdlp-workflow-redesign .product .workbench-drawer { position: fixed; inset: 0 0 0 auto; width: min(650px,100%); max-width: 100%; height: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: -16px 0 50px color-mix(in srgb,var(--ink) 12%,transparent); }
+#ytdlp-workflow-redesign .product .workbench-drawer[open] { display: flex; flex-direction: column; }
+#ytdlp-workflow-redesign .product .workbench-drawer::backdrop { background: light-dark(#192c5145,#00000080); }
+#ytdlp-workflow-redesign .product .drawer-chrome { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .drawer-close { background: transparent; }
+#ytdlp-workflow-redesign .product .drawer-pages { display: flex; flex-direction: column; padding: 0; overflow: hidden; flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .drawer-pages .view { flex: 1; min-width: 0; min-height: 0; }
+#ytdlp-workflow-redesign .product .drawer-pages h1 { font-size: 23px; }
+#ytdlp-workflow-redesign .product .drawer-pages .page-top { flex-shrink: 0; margin: 0; padding: 16px 24px 12px; }
+#ytdlp-workflow-redesign .product .drawer-pages .candidate-list, #ytdlp-workflow-redesign .product .drawer-pages .output-form, #ytdlp-workflow-redesign .product .drawer-pages .detail-panel { overflow: visible; flex: initial; max-width: none; }
+#ytdlp-workflow-redesign .product .drawer-pages .source-scroll, #ytdlp-workflow-redesign .product .drawer-pages .form-scroll, #ytdlp-workflow-redesign .product .drawer-pages .detail-scroll { flex: 1; min-height: 0; padding: 20px 24px; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+#ytdlp-workflow-redesign .product .drawer-pages .candidate { grid-template-columns: 18px 64px minmax(0,1fr) 22px; gap: 10px; }
+#ytdlp-workflow-redesign .product .drawer-pages .link-area { grid-template-columns: 1fr; }
+#ytdlp-workflow-redesign .product .drawer-pages .link-box textarea { font-size: 14px; }
+#ytdlp-workflow-redesign .product .drawer-pages .selection-tools { align-items: flex-start; }
+#ytdlp-workflow-redesign .product .drawer-pages .selection-tools > label { flex-wrap: wrap; }
+#ytdlp-workflow-redesign .product .drawer-pages .view-actions { flex-shrink: 0; flex-wrap: wrap; background: var(--surface); margin: 0; padding: 12px 24px; gap: 8px; }
+#ytdlp-workflow-redesign .product .drawer-pages .detail-tools, #ytdlp-workflow-redesign .product .drawer-pages .detail-actions { flex-shrink: 0; padding: 0 24px 12px; }
+#ytdlp-workflow-redesign .product .drawer-pages .detail-actions .view-actions { padding: 12px 0 0; }
+#ytdlp-workflow-redesign .product .drawer-pages .scheme-layout { grid-template-columns: 136px minmax(0,1fr); gap: 16px; }
+#ytdlp-workflow-redesign .product .drawer-pages .field-palette .palette-group { grid-template-columns: 1fr; gap: 4px; }
+#ytdlp-workflow-redesign .product .drawer-summary { margin-top: 20px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--rail); }
+#ytdlp-workflow-redesign .product .drawer-summary > summary { font-weight: 500; }
+#ytdlp-workflow-redesign .product .context-sidebar { padding: 16px 0 0; border: 0; background: transparent; container-type: normal; }
+#ytdlp-workflow-redesign .product .context-pane { flex: initial; }
+#ytdlp-workflow-redesign .product .context-pane .inspector-log { margin-top: 12px; }
+#ytdlp-workflow-redesign .product .workbench-output-tabs { display: flex; gap: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+#ytdlp-workflow-redesign .product .workbench-output-tabs button { border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted-ink); padding: 10px 0; font-size: 13px; }
+#ytdlp-workflow-redesign .product .workbench-output-tabs button[aria-pressed="true"] { color: var(--brand); border-bottom-color: var(--brand); }
+#ytdlp-workflow-redesign .product .output-core-fields { align-items: start; gap: 16px; }
+#ytdlp-workflow-redesign .product .output-core-fields > .field { display: grid; grid-template-rows: auto 40px auto; align-content: start; gap: 8px; }
+#ytdlp-workflow-redesign .product .output-core-fields select, #ytdlp-workflow-redesign .product .output-core-fields .quality-value { height: 40px; min-height: 40px; margin: 0; padding: 7px 11px; }
+#ytdlp-workflow-redesign .product .output-core-fields .quality-value { display: flex; align-items: center; border: 1px solid transparent; color: var(--ink); font-size: 14px; line-height: 20px; }
+#ytdlp-workflow-redesign .product .output-core-fields .field-help { margin: 0; line-height: 20px; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .output-processing { padding: 14px; margin-top: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--rail); }
+#ytdlp-workflow-redesign .product .output-processing .small-note { margin: 10px 0 0; line-height: 20px; }
+#ytdlp-workflow-redesign .product .output-processing .m4a-processing { max-width: none; }
+#ytdlp-workflow-redesign .product .output-processing .format-change-notice { color: var(--brand); }
+#ytdlp-workflow-redesign .product .workbench-drawer[data-view="output"] .drawer-pages { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+#ytdlp-workflow-redesign .product .drawer-pages [data-page="output"] { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+#ytdlp-workflow-redesign .product .drawer-pages [data-page="output"] > .page-top { flex-shrink: 0; padding: 16px 24px 12px; margin: 0; }
+#ytdlp-workflow-redesign .product .drawer-pages [data-page="output"] > .workbench-output-tabs { flex-shrink: 0; padding: 0 24px; margin: 0; }
+#ytdlp-workflow-redesign .product .output-scroll { flex: 1; min-height: 0; padding: 20px 24px; overflow: auto; overscroll-behavior: contain; container-type: inline-size; container-name: output-body; }
+#ytdlp-workflow-redesign .product .output-scroll .output-layout, #ytdlp-workflow-redesign .product .output-scroll .output-list-pane { display: block; }
+#ytdlp-workflow-redesign .product .drawer-pages [data-page="output"] > .view-actions { flex-shrink: 0; margin: 0; padding: 12px 24px; gap: 8px; }
+#ytdlp-workflow-redesign .product .drawer-pages [data-page="output"] > .view-actions .action-pair { margin-left: auto; }
+#ytdlp-workflow-redesign .product .output-scroll .advanced-body { padding: 0 0 20px; }
+#ytdlp-workflow-redesign .product .output-scroll .advanced-block > summary { flex-wrap: wrap; gap: 6px 12px; padding: 18px 0 14px; }
+#ytdlp-workflow-redesign .product .output-scroll .advanced-block > summary .section-value { font-size: 12px; font-weight: 400; color: var(--muted-ink); }
+#ytdlp-workflow-redesign .product .output-scroll .field-help { line-height: 20px; color: var(--muted-ink); font-size: 12px; }
+#ytdlp-workflow-redesign .product .output-scroll .advanced-options .field > select, #ytdlp-workflow-redesign .product .output-scroll .advanced-options .input-actions > input, #ytdlp-workflow-redesign .product .output-scroll .advanced-options .input-actions > select { height: 40px; min-height: 40px; }
+#ytdlp-workflow-redesign .product .output-scroll .check-row { line-height: 21px; }
+#ytdlp-workflow-redesign .product .advanced-inherited { margin: 0 0 16px; padding: 12px; background: var(--rail); border: 1px solid var(--line); border-radius: 10px; line-height: 20px; }
+@container output-body (max-width:540px) {
+  #ytdlp-workflow-redesign .product .advanced-options .two-fields { grid-template-columns: minmax(0,1fr); }
+}
+#ytdlp-workflow-redesign .product .workbench-reselect-note, #ytdlp-workflow-redesign .product .workbench-scope-note { color: var(--muted-ink); padding: 14px; background: var(--rail); border-radius: 10px; font-size: 13px; margin: 12px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+#ytdlp-workflow-redesign .product .workbench-confirm { width: min(540px,calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); color: var(--ink); }
+#ytdlp-workflow-redesign .product .workbench-confirm::backdrop { background: light-dark(#192c5145,#00000080); }
+#ytdlp-workflow-redesign .product .workbench-confirm[open] { display: flex; flex-direction: column; overflow: hidden; }
+#ytdlp-workflow-redesign .product .workbench-confirm > h2, #ytdlp-workflow-redesign .product .workbench-confirm > .action-pair { flex-shrink: 0; }
+#ytdlp-workflow-redesign .product .workbench-confirm .workbench-scope-note { min-height: 0; overflow: auto; }
+#ytdlp-workflow-redesign .product .desktop-footer { border-radius: 0; background: var(--surface); font-size: 12px; }
+@media (max-width:1100px) {
+  #ytdlp-workflow-redesign .product { --nav-width: 188px; }
+  #ytdlp-workflow-redesign .product .desktop-bar { padding-right: 16px; }
+  #ytdlp-workflow-redesign .product .app-nav { padding-left: 10px; padding-right: 10px; }
+  #ytdlp-workflow-redesign .product .workbench-brand { padding: 0 15px; }
+  #ytdlp-workflow-redesign .product .workbench-brand small { display: none; }
+  #ytdlp-workflow-redesign .product .main-area { padding: 16px; }
+}
+@media (max-height:720px) {
+  #ytdlp-workflow-redesign .product[data-workspace="home"] .main-area { padding: 12px 16px; }
+  #ytdlp-workflow-redesign .product .workbench-home { grid-template-rows: auto auto minmax(0,1fr); gap: 10px; }
+  #ytdlp-workflow-redesign .product .workbench-home > .page-top, #ytdlp-workflow-redesign .product .workbench-section-heading, #ytdlp-workflow-redesign .product .workbench-input > .small-note { display: none; }
+  #ytdlp-workflow-redesign .product .workbench-input { padding: 10px 14px; }
+  #ytdlp-workflow-redesign .product .workbench-input h2 { font-size: 14px; }
+  #ytdlp-workflow-redesign .product .workbench-metrics > div { padding: 8px 12px; }
+  #ytdlp-workflow-redesign .product .workbench-metrics strong { font-size: 20px; margin: 0; }
+  #ytdlp-workflow-redesign .product .workbench-defaults { padding: 10px 12px; }
+  #ytdlp-workflow-redesign .product .workbench-defaults dl { gap: 5px 10px; padding-top: 6px; }
+}
+@media (max-height:600px) {
+  #ytdlp-workflow-redesign .product { --nav-width: 188px; }
+  #ytdlp-workflow-redesign .product .desktop-bar { height: 56px; flex-basis: 56px; }
+  #ytdlp-workflow-redesign .product .workbench-brand { padding: 0 15px; }
+  #ytdlp-workflow-redesign .product .workbench-brand small { display: none; }
+  #ytdlp-workflow-redesign .product .app-nav { padding-top: 10px; padding-bottom: 4px; }
+  #ytdlp-workflow-redesign .product .nav-group-label { padding-bottom: 4px; }
+  #ytdlp-workflow-redesign .product .nav-settings-heading { margin-top: 12px; }
+  #ytdlp-workflow-redesign .product .nav-button { min-height: 32px; padding: 6px 10px; }
+  #ytdlp-workflow-redesign .product .settings-link { min-height: 28px; padding: 4px 9px; }
+  #ytdlp-workflow-redesign .product .main-area { padding: 12px 16px; }
+  #ytdlp-workflow-redesign .product .settings-heading { min-height: 44px; margin-bottom: 12px; }
+  #ytdlp-workflow-redesign .product .settings-groups { padding: 18px; }
+  #ytdlp-workflow-redesign .product [data-page="queue"] > .page-top { display: none; }
+  #ytdlp-workflow-redesign .product .queue-tools { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px; }
+  #ytdlp-workflow-redesign .product .queue-tools > .list-scroll-tools { grid-column: 2; grid-row: 1; }
+  #ytdlp-workflow-redesign .product .queue-tool-right { grid-column: 1 / -1; grid-row: 2; flex-wrap: nowrap; }
+  #ytdlp-workflow-redesign .product .queue-search { flex: 1; width: 0; min-width: 100px; max-width: none; }
+  #ytdlp-workflow-redesign .product .group-filter { flex: 0 0 145px; }
+  #ytdlp-workflow-redesign .product .group-create { flex-shrink: 0; font-size: 12px; min-height: 35px; padding: 7px 10px; }
+  #ytdlp-workflow-redesign .product .queue-select-row { margin: 6px 0 4px; }
+  #ytdlp-workflow-redesign .product .queue-scope-tools { padding: 6px; margin: 4px 0; gap: 6px; }
+  #ytdlp-workflow-redesign .product .queue-scope-field { width: 124px; }
+  #ytdlp-workflow-redesign .product .queue-scope-tools[data-scope="all"] .queue-group-context > strong { display: none; }
+  #ytdlp-workflow-redesign .product .queue-scope-tools .queue-group-context > span { white-space: normal; font-size: 11px; line-height: 16px; }
+  #ytdlp-workflow-redesign .product .scope-full-label { display: none; }
+  #ytdlp-workflow-redesign .product .scope-compact-label { display: inline; }
+  #ytdlp-workflow-redesign .product .batch-bar { padding: 6px; gap: 6px; }
+  #ytdlp-workflow-redesign .product .batch-bar .button { min-height: 32px; padding: 6px 10px; }
+  #ytdlp-workflow-redesign .product .job, #ytdlp-workflow-redesign .product[data-layout="native"] .job { padding-top: 10px; padding-bottom: 10px; }
+  #ytdlp-workflow-redesign .product .drawer-chrome { padding: 10px 20px; }
+  #ytdlp-workflow-redesign .product .drawer-pages .page-top { padding-top: 12px; }
+  #ytdlp-workflow-redesign .product .drawer-pages .page-top h1 { font-size: 20px; margin-top: 0; margin-bottom: 4px; }
+  #ytdlp-workflow-redesign .product .drawer-pages .page-top .eyebrow { display: none; }
+}
+@media (max-width:600px) {
+  #ytdlp-workflow-redesign .product .workbench-home { grid-template-rows: auto auto minmax(0,1fr); gap: 10px; }
+  #ytdlp-workflow-redesign .product .workbench-home > .page-top, #ytdlp-workflow-redesign .product .workbench-section-heading, #ytdlp-workflow-redesign .product .workbench-input > .small-note, #ytdlp-workflow-redesign .product .workbench-defaults { display: none; }
+  #ytdlp-workflow-redesign .product .workbench-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #ytdlp-workflow-redesign .product .workbench-lower { grid-template-columns: minmax(0,1fr); }
+  #ytdlp-workflow-redesign .product .queue-tool-right { flex-wrap: wrap; }
+  #ytdlp-workflow-redesign .product .queue-search { flex-basis: 100%; }
+}
+@media (max-width:700px) {
+  #ytdlp-workflow-redesign .product { --nav-width: 168px; }
+  #ytdlp-workflow-redesign .product .desktop-bar { padding-right: 12px; gap: 10px; }
+  #ytdlp-workflow-redesign .product .workbench-brand { padding: 0 10px; gap: 6px; }
+  #ytdlp-workflow-redesign .product .workbench-brand strong { font-size: 13px; }
+  #ytdlp-workflow-redesign .product .app-nav { padding-left: 6px; padding-right: 6px; }
+  #ytdlp-workflow-redesign .product .main-area { padding-left: 12px; padding-right: 12px; }
+  #ytdlp-workflow-redesign .product .workbench-input { padding: 18px; }
+  #ytdlp-workflow-redesign .product .workbench-source-form { grid-template-columns: 1fr; }
+  #ytdlp-workflow-redesign .product .workbench-metrics > div { padding: 14px; }
+  #ytdlp-workflow-redesign .product .queue-tool-right { width: 100%; }
+  #ytdlp-workflow-redesign .product .queue-search { max-width: none; }
+  #ytdlp-workflow-redesign .product .queue-group-status { display: none; }
+  #ytdlp-workflow-redesign .product .job, #ytdlp-workflow-redesign .product[data-layout="native"] .job { grid-template-columns: 18px minmax(0,1fr) auto; gap: 8px; padding: 12px; }
+  #ytdlp-workflow-redesign .product .job-cover { display: none; }
+  #ytdlp-workflow-redesign .product .job-child { padding-left: 28px !important; }
+  #ytdlp-workflow-redesign .product .job-content { grid-template-columns: minmax(0,1fr); grid-template-areas: "title" "meta" "status" "progress" "extra"; }
+  #ytdlp-workflow-redesign .product .settings-groups { padding: 18px; }
+  #ytdlp-workflow-redesign .product .drawer-chrome { padding: 14px 20px; }
+  #ytdlp-workflow-redesign .product .two-fields, #ytdlp-workflow-redesign .product .drawer-pages .scheme-layout { grid-template-columns: 1fr; }
+  #ytdlp-workflow-redesign .product .drawer-pages .scheme-list { border: 0; padding: 0; }
+  #ytdlp-workflow-redesign .product .desktop-footer > span:last-child { display: none; }
+}
+@media (forced-colors:active) {
+  #ytdlp-workflow-redesign .product *::-webkit-scrollbar { width: auto; height: auto; }
+  #ytdlp-workflow-redesign .product *::-webkit-scrollbar-thumb { background: CanvasText; }
+  #ytdlp-workflow-redesign .product *::-webkit-scrollbar-track { background: Canvas; }
+}
